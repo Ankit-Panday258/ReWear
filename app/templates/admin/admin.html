@@ -1,0 +1,129 @@
+{% extends "components/base.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block style %}
+<style>
+    .stat-card {
+        border-left: 5px solid #007bff;
+        margin-bottom: 1.5rem;
+    }
+    .stat-card h5 {
+        color: #007bff;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid mt-4">
+    <h1 class="h2">Admin Dashboard</h1>
+    <p>Welcome, {{ current_user.username if current_user else 'Admin' }}. Here is an overview of your platform.</p>
+
+    <!-- Statistics Cards -->
+    <div class="row">
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <div class="card-body">
+                    <h5 class="card-title">Total Users</h5>
+                    <p class="card-text display-4">{{ stats.total_users if stats else '0' }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <div class="card-body">
+                    <h5 class="card-title">Total Listings</h5>
+                    <p class="card-text display-4">{{ stats.total_listings if stats else '0' }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <div class="card-body">
+                    <h5 class="card-title">Pending Listings</h5>
+                    <p class="card-text display-4">{{ stats.pending_listings if stats else '0' }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card stat-card">
+                <div class="card-body">
+                    <h5 class="card-title">Completed Swaps</h5>
+                    <p class="card-text display-4">{{ stats.completed_swaps if stats else '0' }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Activity & Pending Listings -->
+    <div class="row mt-4">
+        <div class="col-md-8">
+            <h4>Recent Pending Listings</h4>
+            {% if stats and stats.recent_pending_listings %}
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Category</th>
+                                <th>Uploader</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for listing in stats.recent_pending_listings %}
+                                <tr>
+                                    <td>{{ listing.title }}</td>
+                                    <td>{{ listing.category }}</td>
+                                    <td>{{ listing.uploader.username }}</td>
+                                    <td>{{ listing.created_at.strftime('%Y-%m-%d') }}</td>
+                                    <td>
+                                        <form action="{{ url_for('admin.approveListing', listing_id=listing.id) }}" method="POST" class="d-inline">
+                                            <button type="submit" class="btn btn-success btn-sm">Approve</button>
+                                        </form>
+                                        <form action="{{ url_for('admin.rejectListing', listing_id=listing.id) }}" method="POST" class="d-inline">
+                                            <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p>No pending listings at the moment.</p>
+            {% endif %}
+        </div>
+
+        <div class="col-md-4">
+            <h4>Recent New Users</h4>
+            {% if stats and stats.recent_users %}
+                <ul class="list-group">
+                    {% for user in stats.recent_users %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ user.username }}
+                            <span class="badge bg-primary rounded-pill">{{ user.created_at.strftime('%Y-%m-%d') }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No new users recently.</p>
+            {% endif %}
+
+            <h4 class="mt-4">Listing Categories</h4>
+            {% if stats and stats.category_stats %}
+                <ul class="list-group">
+                    {% for category, count in stats.category_stats.items() %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {{ category }}
+                            <span class="badge bg-info rounded-pill">{{ count }}</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No category data available.</p>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

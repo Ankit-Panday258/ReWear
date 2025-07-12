@@ -1,16 +1,25 @@
-<div class="login-card">
-    <img src="https://i.ibb.co/0Jmshvb/avatar.png" alt="avatar">
-    <form>
-        <label for="email">Email or Username</label>
-        <input type="email" id="email" placeholder="Email or Username">
+{% extends 'components/base.html' %}
+
+{% block title %}Login - ReWear{% endblock %}
+
+{% block style %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="login-box">
+    <div class="avatar">
+        <img src="https://cdn-icons-png.flaticon.com/512/2922/2922510.png" alt="avatar">
+    </div>
+    <form method="POST" action="{{ url_for('auth.login') }}">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" placeholder="Email" required>
 
         <label for="password">Password</label>
-        <input type="password" id="password" placeholder="••••••••">
+        <input type="password" id="password" name="password" placeholder="Enter password" required>
 
-        <button type="submit">Log in</button>
-        <p style="text-align: center; margin-top: 20px;">
-            Don't have an account?
-            <a href="#" style="color: #e8611c;">Register up</a>
-        </p>
+        <button type="submit">Login</button>
+        <p>Don't have an account? <a href="{{ url_for('auth.register') }}">Register</a></p>
     </form>
 </div>
+{% endblock %}
