@@ -79,8 +79,11 @@ def mySwaps():
     ).order_by(SwapRequest.created_at.desc()).all()
     
     # Get swap requests for user's items (incoming)
-    incoming_swaps = SwapRequest.query.join(Listing).filter(
-        Listing.uploader_id == current_user.user_id
+    incoming_swaps = SwapRequest.query.join(
+        Listing, SwapRequest.requested_item_id == Listing.id
+    ).filter(
+        Listing.uploader_id == current_user.user_id,
+        SwapRequest.requester_id != current_user.user_id  
     ).order_by(SwapRequest.created_at.desc()).all()
     
     return render_template("user/my_swaps.html", 
@@ -113,38 +116,3 @@ def userPoints():
         'points': current_user.points,
         'user_id': current_user.user_id
     })
-
-@user.route("/dashboard")
-@login_required 
-def dashboard():
-    """User dashboard with overview"""
-    current_user = get_current_user()
-    
-    # Recent listings
-    recent_listings = Listing.query.filter_by(
-        uploader_id=current_user.user_id
-    ).order_by(Listing.created_at.desc()).limit(5).all()
-    
-    # Recent swap activity
-    recent_swaps = SwapRequest.query.filter(
-        or_(
-            SwapRequest.requester_id == current_user.user_id,
-            SwapRequest.requested_item.has(uploader_id=current_user.user_id)
-        )
-    ).order_by(SwapRequest.created_at.desc()).limit(5).all()
-    
-    # Pending requests for user's items
-    pending_requests = SwapRequest.query.join(Listing).filter(
-        Listing.uploader_id == current_user.user_id,
-        SwapRequest.status == 'Pending'
-    ).count()
-    
-    dashboard_data = {
-        'recent_listings': recent_listings,
-        'recent_swaps': recent_swaps,
-        'pending_requests': pending_requests
-    }
-    
-    return render_template("user/dashboard.html", 
-                         current_user=current_user,
-                         data=dashboard_data)

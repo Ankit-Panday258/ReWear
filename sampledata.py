@@ -149,6 +149,31 @@ def create_sample_listings(users):
         # Random approval status (most should be approved for testing)
         is_approved = random.choice([True, True, True, False])  # 75% approved
         
+        # Random condition for the item
+        conditions = ['New', 'Like New', 'Good', 'Acceptable']
+        condition = random.choice(conditions)
+        
+        # Generate random tags based on item type and category
+        tag_options = {
+            'Shirt': ['casual', 'formal', 'cotton', 'summer', 'comfortable'],
+            'Pants': ['denim', 'comfortable', 'casual', 'work', 'trendy'],
+            'Dress': ['elegant', 'formal', 'party', 'summer', 'vintage'],
+            'Others': ['unique', 'stylish', 'trendy', 'designer', 'statement']
+        }
+        
+        base_tags = tag_options.get(listing_data['type'], ['stylish', 'trendy'])
+        category_tags = {
+            'Men': ['mens', 'masculine'],
+            'Women': ['womens', 'feminine'],
+            'Kids': ['kids', 'cute', 'colorful']
+        }
+        
+        # Combine base tags with category-specific tags
+        all_tags = base_tags + category_tags.get(listing_data['category'], [])
+        # Randomly select 2-4 tags
+        selected_tags = random.sample(all_tags, min(random.randint(2, 4), len(all_tags)))
+        tags_string = ', '.join(selected_tags)
+        
         listing = Listing(
             uploader_id=random.choice(users[:-1]).user_id,  # Don't use admin as uploader
             title=listing_data['title'],
@@ -156,6 +181,8 @@ def create_sample_listings(users):
             category=listing_data['category'],
             type=listing_data['type'],
             size=listing_data['size'],
+            condition=condition,
+            tags=tags_string,
             image_url=random.choice(sample_images),
             point_value=listing_data['point_value'],
             is_approved=is_approved,
@@ -231,6 +258,13 @@ def populate_sample_data():
     app = create_app()
     with app.app_context():
         print("Creating sample data...")
+        
+        # Clear existing data
+        print("Clearing existing data...")
+        SwapRequest.query.delete()
+        Listing.query.delete()
+        User.query.delete()
+        db.session.commit()
         
         # Create sample users
         print("Creating sample users...")

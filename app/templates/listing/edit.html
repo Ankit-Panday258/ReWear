@@ -1,0 +1,344 @@
+{% extends "/components/base.html" %} {% block title %}Edit Item - ReWear{%
+endblock %} {% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/new.css') }}" />
+{% endblock %} {% block content %}
+<div class="add-item-container">
+  <!-- Header Section -->
+  <div class="page-header">
+    <div class="header-content">
+      <h1 class="page-title">
+        <i class="fas fa-edit me-2"></i>
+        Edit Item
+      </h1>
+      <p class="page-subtitle">
+        Update your item details for the ReWear community
+      </p>
+    </div>
+  </div>
+
+  <!-- Main Form Card -->
+  <div class="form-card">
+    <form
+      action="{{ url_for('listing.updateListing', listing_id=listing.id) }}"
+      method="POST"
+      id="editItemForm">
+      <!-- Image URL Section -->
+      <div class="section-card image-section">
+        <div class="section-header">
+          <h3 class="section-title">
+            <i class="fas fa-camera me-2"></i>
+            Item Image
+          </h3>
+          <p class="section-subtitle">
+            Provide an image URL to showcase your item
+          </p>
+        </div>
+
+        <div class="image-url-area">
+          <div class="form-group">
+            <label for="image_url" class="form-label">
+              <i class="fas fa-link me-2"></i>
+              Image URL
+            </label>
+            <input
+              type="url"
+              id="image_url"
+              name="image_url"
+              class="form-control"
+              placeholder="https://example.com/your-image.jpg"
+              value="{{ listing.image_url or '' }}"
+              onchange="previewImage(this.value)" />
+            <div class="form-hint">
+              Paste a direct link to your image (JPG, PNG, etc.)
+            </div>
+          </div>
+
+          <div class="image-preview-area" id="imagePreviewArea">
+            {% if listing.image_url %}
+            <div class="image-preview-success">
+              <img src="{{ listing.image_url }}" alt="Image preview" class="preview-image" 
+                   onclick="showFullPreview('{{ listing.image_url }}')">
+              <div class="preview-overlay">
+                <button type="button" class="btn btn-sm btn-light" 
+                        onclick="showFullPreview('{{ listing.image_url }}')">
+                  <i class="fas fa-eye"></i> View Full Size
+                </button>
+              </div>
+            </div>
+            {% else %}
+            <div class="preview-placeholder" id="previewPlaceholder">
+              <i class="fas fa-image"></i>
+              <p>Image preview will appear here</p>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Item Details Section -->
+      <div class="section-card details-section">
+        <div class="section-header">
+          <h3 class="section-title">
+            <i class="fas fa-info-circle me-2"></i>
+            Item Details
+          </h3>
+          <p class="section-subtitle">
+            Update detailed information about your item
+          </p>
+        </div>
+
+        <div class="form-grid">
+          <!-- Title -->
+          <div class="form-group full-width">
+            <label for="title" class="form-label">
+              <i class="fas fa-tag me-2"></i>
+              Title *
+            </label>
+            <input
+              type="text"
+              id="title"
+              name="title"
+              class="form-control"
+              placeholder="Enter a catchy title for your item"
+              value="{{ listing.title }}"
+              required />
+            <div class="form-hint">Make it descriptive and appealing</div>
+          </div>
+
+          <!-- Description -->
+          <div class="form-group full-width">
+            <label for="description" class="form-label">
+              <i class="fas fa-align-left me-2"></i>
+              Description
+            </label>
+            <textarea
+              id="description"
+              name="description"
+              class="form-control"
+              rows="4"
+              placeholder="Describe your item's condition, style, and any special features...">{{ listing.description or '' }}</textarea>
+            <div class="form-hint">
+              Include size, condition, brand, and styling tips
+            </div>
+          </div>
+
+          <!-- Category -->
+          <div class="form-group">
+            <label for="category" class="form-label">
+              <i class="fas fa-users me-2"></i>
+              Category *
+            </label>
+            <select id="category" name="category" class="form-control" required>
+              <option value="">Select Category</option>
+              <option value="Men" {% if listing.category == 'Men' %}selected{% endif %}>Men</option>
+              <option value="Women" {% if listing.category == 'Women' %}selected{% endif %}>Women</option>
+              <option value="Kids" {% if listing.category == 'Kids' %}selected{% endif %}>Kids</option>
+            </select>
+          </div>
+
+          <!-- Type -->
+          <div class="form-group">
+            <label for="type" class="form-label">
+              <i class="fas fa-tshirt me-2"></i>
+              Type *
+            </label>
+            <select id="type" name="type" class="form-control" required>
+              <option value="">Select Type</option>
+              <option value="Shirt" {% if listing.type == 'Shirt' %}selected{% endif %}>Shirt</option>
+              <option value="Pants" {% if listing.type == 'Pants' %}selected{% endif %}>Pants</option>
+              <option value="Dress" {% if listing.type == 'Dress' %}selected{% endif %}>Dress</option>
+              <option value="Others" {% if listing.type == 'Others' %}selected{% endif %}>Others</option>
+            </select>
+          </div>
+
+          <!-- Size -->
+          <div class="form-group">
+            <label for="size" class="form-label">
+              <i class="fas fa-ruler me-2"></i>
+              Size *
+            </label>
+            <select id="size" name="size" class="form-control" required>
+              <option value="">Select Size</option>
+              <option value="S" {% if listing.size == 'S' %}selected{% endif %}>Small (S)</option>
+              <option value="M" {% if listing.size == 'M' %}selected{% endif %}>Medium (M)</option>
+              <option value="L" {% if listing.size == 'L' %}selected{% endif %}>Large (L)</option>
+              <option value="XL" {% if listing.size == 'XL' %}selected{% endif %}>Extra Large (XL)</option>
+            </select>
+          </div>
+
+          <!-- Point Value -->
+          <div class="form-group">
+            <label for="point_value" class="form-label">
+              <i class="fas fa-coins me-2"></i>
+              Point Value
+            </label>
+            <input
+              type="number"
+              id="point_value"
+              name="point_value"
+              class="form-control"
+              value="{{ listing.point_value }}"
+              min="0"
+              step="10"
+              placeholder="100" />
+            <div class="form-hint">Points others will earn by swapping</div>
+          </div>
+
+          <!-- Condition -->
+          <div class="form-group">
+            <label for="condition" class="form-label">
+              <i class="fas fa-star me-2"></i>
+              Condition
+            </label>
+            <select id="condition" name="condition" class="form-control">
+              <option value="">Select Condition</option>
+              <option value="New" {% if listing.condition == 'New' %}selected{% endif %}>New</option>
+              <option value="Like New" {% if listing.condition == 'Like New' %}selected{% endif %}>Like New</option>
+              <option value="Good" {% if listing.condition == 'Good' %}selected{% endif %}>Good</option>
+              <option value="Acceptable" {% if listing.condition == 'Acceptable' %}selected{% endif %}>Acceptable</option>
+            </select>
+            <div class="form-hint">Current condition of the item</div>
+          </div>
+
+          <!-- Tags -->
+          <div class="form-group full-width">
+            <label for="tags" class="form-label">
+              <i class="fas fa-hashtag me-2"></i>
+              Tags
+            </label>
+            <input
+              type="text"
+              id="tags"
+              name="tags"
+              class="form-control"
+              value="{{ listing.get_tags_list() | join(', ') if listing.get_tags_list() else '' }}"
+              placeholder="casual, vintage, summer, designer..." />
+            <div class="form-hint">Update relevant tags separated by commas</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-section">
+        <div class="action-buttons">
+          <a href="{{ url_for('listing.showListing', listing_id=listing.id) }}" 
+             class="btn btn-secondary">
+            <i class="fas fa-times me-2"></i>
+            Cancel
+          </a>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save me-2"></i>
+            Update Item
+          </button>
+        </div>
+        <div class="submit-info">
+          <i class="fas fa-info-circle me-2"></i>
+          Your updated item will need to be reviewed again before going live
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Preview Modal -->
+<div class="modal fade" id="imagePreviewModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Image Preview</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body text-center">
+        <img id="previewImage" src="" alt="Preview" class="img-fluid" />
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block script %}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Form validation
+    document
+      .getElementById("editItemForm")
+      .addEventListener("submit", function (e) {
+        const title = document.getElementById("title").value.trim();
+        const category = document.getElementById("category").value;
+        const type = document.getElementById("type").value;
+        const size = document.getElementById("size").value;
+
+        if (!title || !category || !type || !size) {
+          e.preventDefault();
+          alert("Please fill in all required fields.");
+          return false;
+        }
+      });
+  });
+
+  // Global function to preview image from URL
+  function previewImage(url) {
+    const previewArea = document.getElementById("imagePreviewArea");
+    const placeholder = document.getElementById("previewPlaceholder");
+
+    if (!url || url.trim() === "") {
+      // Show placeholder when no URL
+      previewArea.innerHTML = `
+        <div class="preview-placeholder" id="previewPlaceholder">
+          <i class="fas fa-image"></i>
+          <p>Image preview will appear here</p>
+        </div>
+      `;
+      return;
+    }
+
+    // Create image element to test if URL is valid
+    const testImg = new Image();
+
+    testImg.onload = function () {
+      // Image loaded successfully, show preview
+      previewArea.innerHTML = `
+        <div class="image-preview-success">
+          <img src="${url}" alt="Image preview" class="preview-image" 
+               onclick="showFullPreview('${url}')">
+          <div class="preview-overlay">
+            <button type="button" class="btn btn-sm btn-light" 
+                    onclick="showFullPreview('${url}')">
+              <i class="fas fa-eye"></i> View Full Size
+            </button>
+          </div>
+        </div>
+      `;
+    };
+
+    testImg.onerror = function () {
+      // Image failed to load, show error
+      previewArea.innerHTML = `
+        <div class="preview-error">
+          <i class="fas fa-exclamation-triangle"></i>
+          <p>Unable to load image from this URL</p>
+          <small>Please check the URL and try again</small>
+        </div>
+      `;
+    };
+
+    // Start loading the image
+    testImg.src = url;
+
+    // Show loading state
+    previewArea.innerHTML = `
+      <div class="preview-loading">
+        <i class="fas fa-spinner fa-spin"></i>
+        <p>Loading image preview...</p>
+      </div>
+    `;
+  }
+
+  // Global function to show full preview
+  function showFullPreview(url) {
+    document.getElementById("previewImage").src = url;
+    new bootstrap.Modal(document.getElementById("imagePreviewModal")).show();
+  }
+</script>
+{% endblock %}

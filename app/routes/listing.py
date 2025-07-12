@@ -42,6 +42,8 @@ def createListing():
         category = request.form.get('category')
         item_type = request.form.get('type')
         size = request.form.get('size')
+        condition = request.form.get('condition', 'Good').strip()
+        tags = request.form.get('tags', '').strip()
         image_url = request.form.get('image_url', '').strip()
         point_value = request.form.get('point_value', 100, type=int)
         
@@ -66,6 +68,11 @@ def createListing():
             flash('Point value must be positive.', 'danger')
             return redirect(url_for('listing.renderNewPage'))
         
+        # Validate condition if provided
+        if condition and condition not in ['New', 'Like New', 'Good', 'Acceptable']:
+            flash('Valid condition is required.', 'danger')
+            return redirect(url_for('listing.renderNewPage'))
+        
         # Create new listing
         new_listing = Listing(
             uploader_id=current_user.user_id,
@@ -74,9 +81,14 @@ def createListing():
             category=category,
             type=item_type,
             size=size,
+            condition=condition if condition else 'Good',
             image_url=image_url if image_url else None,
             point_value=point_value
         )
+        
+        # Set tags if provided
+        if tags:
+            new_listing.set_tags([tag.strip() for tag in tags.split(',') if tag.strip()])
         
         db.session.add(new_listing)
         db.session.commit()
@@ -199,23 +211,25 @@ def updateListing(listing_id):
         category = request.form.get('category')
         item_type = request.form.get('type')
         size = request.form.get('size')
+        condition = request.form.get('condition', '').strip()
+        tags = request.form.get('tags', '').strip()
         image_url = request.form.get('image_url', '').strip()
         point_value = request.form.get('point_value', type=int)
         
-        # Validation
+        # Validation - these fields are required
         if not title:
             flash('Title is required.', 'danger')
             return redirect(url_for('listing.renderEditPage', listing_id=listing_id))
         
-        if category and category not in ['Men', 'Women', 'Kids']:
+        if not category or category not in ['Men', 'Women', 'Kids']:
             flash('Valid category is required.', 'danger')
             return redirect(url_for('listing.renderEditPage', listing_id=listing_id))
         
-        if item_type and item_type not in ['Shirt', 'Pants', 'Dress', 'Others']:
+        if not item_type or item_type not in ['Shirt', 'Pants', 'Dress', 'Others']:
             flash('Valid item type is required.', 'danger')
             return redirect(url_for('listing.renderEditPage', listing_id=listing_id))
         
-        if size and size not in ['S', 'M', 'L', 'XL']:
+        if not size or size not in ['S', 'M', 'L', 'XL']:
             flash('Valid size is required.', 'danger')
             return redirect(url_for('listing.renderEditPage', listing_id=listing_id))
         
@@ -223,19 +237,25 @@ def updateListing(listing_id):
             flash('Point value must be positive.', 'danger')
             return redirect(url_for('listing.renderEditPage', listing_id=listing_id))
         
+        # Validate condition if provided
+        if condition and condition not in ['New', 'Like New', 'Good', 'Acceptable']:
+            flash('Valid condition is required.', 'danger')
+            return redirect(url_for('listing.renderEditPage', listing_id=listing_id))
+        
         # Update listing
         listing_item.title = title
         listing_item.description = description
-        if category:
-            listing_item.category = category
-        if item_type:
-            listing_item.type = item_type
-        if size:
-            listing_item.size = size
-        if image_url:
-            listing_item.image_url = image_url
-        if point_value is not None:
-            listing_item.point_value = point_value
+        listing_item.category = category
+        listing_item.type = item_type
+        listing_item.size = size
+        if condition:
+            listing_item.condition = condition
+        listing_item.image_url = image_url if image_url else listing_item.image_url
+        listing_item.point_value = point_value if point_value is not None else listing_item.point_value
+        
+        # Update tags if provided
+        if tags:
+            listing_item.set_tags([tag.strip() for tag in tags.split(',') if tag.strip()])
         
         # Reset approval status if significant changes were made
         listing_item.is_approved = False
