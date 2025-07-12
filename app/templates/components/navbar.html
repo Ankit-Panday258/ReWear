@@ -1,30 +1,15 @@
 {% block style%}
-<link
-  rel="stylesheet"
-  href="{{ url_for('static', filename='css/navbar.css') }}" />
+<link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}" />
 {%endblock%}
-<nav class="navbar navbar-expand-lg navbar-purple">
+<nav class="navbar navbar-expand-lg navbar-purple" role="navigation" aria-label="Main navigation">
   <div class="container">
-    <a class="navbar-brand" href="{{ url_for('home.index') }}">
-      <!-- Replace with your actual logo -->
-      <img
-        src="{{ url_for('static', filename='images/logo.png') }}"
-        alt="Logo"
-        height="30" />
+    <a class="navbar-brand" href="{{ url_for('home.index') }}" aria-label="ReWear Home">
+      <img src="{{ url_for('static', filename='images/logo.png') }}" alt="ReWear Logo" height="30" />
     </a>
-    <button
-      class="navbar-toggler"
-      type="button"
-      data-bs-toggle="collapse"
-      data-bs-target="#navbarNav"
-      aria-controls="navbarNav"
-      aria-expanded="false"
-      aria-label="Toggle navigation">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div
-      class="collapse navbar-collapse justify-content-between"
-      id="navbarNav">
+    <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
       <ul class="navbar-nav mx-auto">
         <li class="nav-item">
           <a class="nav-link" href="{{ url_for('home.index') }}">Home</a>
@@ -34,77 +19,51 @@
         </li>
         {% if current_user %}
         <li class="nav-item">
-          <a class="nav-link" href="{{ url_for('listing.renderNewPage') }}"
-            >Add Item</a
-          >
+          <a class="nav-link" href="{{ url_for('listing.renderNewPage') }}">Add Item</a>
         </li>
         {% endif %}
       </ul>
-      <!-- Notification and user actions -->
       <div class="d-flex align-items-center">
         {% if current_user %}
-        <a href="#" class="nav-link me-3 position-relative">
-          <!-- Notifications -->
-          <i class="bi bi-bell fs-5"></i>
-          <span
-            class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+        <a href="#" class="nav-link me-3 position-relative" aria-label="Notifications">
+          <i class="bi bi-bell fs-5" aria-hidden="true"></i>
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" aria-label="0 unread notifications">
             0
             <span class="visually-hidden">unread messages</span>
           </span>
         </a>
         <span class="badge bg-warning text-dark me-3" style="font-size: 1rem">
-          <i class="bi bi-star-fill"></i> {{ current_user.points }} Points
+          <i class="bi bi-star-fill" aria-hidden="true"></i> {{ current_user.points }} Points
         </span>
         <div class="dropdown me-2">
-          <button
-            class="btn btn-outline-primary dropdown-toggle"
-            type="button"
-            data-bs-toggle="dropdown">
+          <button class="btn btn-outline-primary dropdown-toggle" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false" aria-label="User menu">
             {{ current_user.username }}
           </button>
-          <ul class="dropdown-menu">
+          <ul class="dropdown-menu" aria-labelledby="userDropdown">
             <li>
-              <a
-                class="dropdown-item"
-                href="{{ url_for('user.renderProfile') }}"
-                >Profile</a
-              >
+              <a class="dropdown-item" href="{{ url_for('user.renderProfile') }}">Profile</a>
             </li>
             <li>
-              <a class="dropdown-item" href="{{ url_for('user.myListings') }}"
-                >My Listings</a
-              >
+              <a class="dropdown-item" href="{{ url_for('user.myListings') }}">My Listings</a>
             </li>
             <li>
-              <a class="dropdown-item" href="{{ url_for('user.mySwaps') }}"
-                >My Swaps</a
-              >
+              <a class="dropdown-item" href="{{ url_for('user.mySwaps') }}">My Swaps</a>
             </li>
             {% if current_user.is_admin %}
             <li><hr class="dropdown-divider" /></li>
             <li>
-              <a class="dropdown-item" href="{{ url_for('admin.renderAdmin') }}"
-                >Admin Panel</a
-              >
+              <a class="dropdown-item" href="{{ url_for('admin.renderAdmin') }}">Admin Panel</a>
             </li>
             {% endif %}
             <li><hr class="dropdown-divider" /></li>
             <li>
-              <a class="dropdown-item" href="{{ url_for('auth.logout') }}"
-                >Logout</a
-              >
+              <a class="dropdown-item" href="{{ url_for('auth.logout') }}">Logout</a>
             </li>
           </ul>
         </div>
         {% else %}
-        <a
-          href="{{ url_for('auth.login') }}"
-          class="btn btn-outline-primary me-2"
-          >Login</a
-        >
-        <a href="{{ url_for('auth.register') }}" class="btn btn-primary"
-          >Sign Up</a
-        >
+        <a href="{{ url_for('auth.login') }}" class="btn btn-outline-primary me-2">Login</a>
+        <a href="{{ url_for('auth.register') }}" class="btn btn-primary">Sign Up</a>
         {% endif %}
       </div>
     </div>

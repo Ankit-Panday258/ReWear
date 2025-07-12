@@ -1,0 +1,27 @@
+{% extends "components/base.html" %}
+{% block title %}My Listings{% endblock %}
+{% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/my_listings.css') }}" />
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>My Listings</h2>
+    {% if my_listings %}
+        <div class="list-group mt-3">
+            {% for listing in my_listings %}
+                <a href="#" class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">{{ listing.title }}</h5>
+                        <small>{{ listing.status }}</small>
+                    </div>
+                    <p class="mb-1">{{ listing.description }}</p>
+                    <small>Category: {{ listing.category }} | Size: {{ listing.size }}</small>
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="mt-3">You haven't listed any items yet.</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,25 +1,106 @@
- .navbar-purple {
-            background-color: #6f42c1; /* Bootstrap's purple color */
-        }
-        .navbar-purple .navbar-brand,
-        .navbar-purple .nav-link,
-        .navbar-purple .navbar-toggler-icon {
-            color: white !important;
-        }
-        .navbar-purple .btn-outline-primary {
-            color: white;
-            border-color: white;
-        }
-        .navbar-purple .btn-outline-primary:hover {
-            background-color: white;
-            color: #6f42c1;
-        }
-        .navbar-purple .btn-primary {
-            background-color: white;
-            color: #6f42c1;
-            border-color: white;
-        }
-        .navbar-purple .btn-primary:hover {
-            background-color: #e9ecef;
-            color: #6f42c1;
-        }
+/* Modernized Navbar Styles */
+.navbar-purple {
+    background: linear-gradient(90deg, #6f42c1 0%, #8e54e9 100%);
+    box-shadow: 0 2px 8px rgba(111, 66, 193, 0.08);
+}
+
+.navbar-purple .navbar-brand,
+.navbar-purple .nav-link,
+.navbar-purple .navbar-toggler-icon {
+    color: #fff !important;
+    transition: color 0.2s;
+}
+
+.navbar-purple .nav-link:hover,
+.navbar-purple .nav-link:focus {
+    color: #ffd700 !important;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
+.navbar-purple .btn-outline-primary {
+    color: #fff;
+    border-color: #fff;
+    transition: background 0.2s, color 0.2s;
+}
+
+.navbar-purple .btn-outline-primary:hover,
+.navbar-purple .btn-outline-primary:focus {
+    background: #fff;
+    color: #6f42c1;
+    border-color: #fff;
+}
+
+.navbar-purple .btn-primary {
+    background: #fff;
+    color: #6f42c1;
+    border-color: #fff;
+    transition: background 0.2s, color 0.2s;
+}
+
+.navbar-purple .btn-primary:hover,
+.navbar-purple .btn-primary:focus {
+    background: #ffd700;
+    color: #6f42c1;
+    border-color: #ffd700;
+}
+
+.navbar-purple .dropdown-menu {
+    background: #fff;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 16px rgba(111, 66, 193, 0.10);
+    border: none;
+}
+
+.navbar-purple .dropdown-item {
+    color: #6f42c1;
+    transition: background 0.2s, color 0.2s;
+}
+
+.navbar-purple .dropdown-item:hover,
+.navbar-purple .dropdown-item:focus {
+    background: #f3e9fc;
+    color: #4b286d;
+}
+
+.navbar-purple .badge.bg-warning {
+    background: linear-gradient(90deg, #ffd700 0%, #ffe066 100%);
+    color: #6f42c1 !important;
+    font-weight: 600;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
+.navbar-purple .position-relative .badge.bg-danger {
+    font-size: 0.7rem;
+    padding: 0.3em 0.5em;
+    border-radius: 1em;
+    top: 0.2em;
+    right: 0.2em;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.12);
+}
+
+/* Responsive tweaks */
+@media (max-width: 991.98px) {
+    .navbar-purple .navbar-collapse {
+        background: #6f42c1;
+        border-radius: 0 0 1rem 1rem;
+        margin-top: 0.5rem;
+        box-shadow: 0 4px 16px rgba(111, 66, 193, 0.10);
+    }
+    .navbar-purple .nav-link {
+        color: #fff !important;
+        padding: 0.75rem 1.5rem;
+    }
+    .navbar-purple .dropdown-menu {
+        box-shadow: none;
+    }
+}
+
+.navbar-purple .navbar-toggler {
+    border: none;
+    background: transparent;
+}
+
+.navbar-purple .navbar-toggler:focus {
+    outline: 2px solid #ffd700;
+    box-shadow: 0 0 0 2px #ffd70033;
+}

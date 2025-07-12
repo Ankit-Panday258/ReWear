@@ -1,0 +1,62 @@
+/* Blue Theme for My Listings Page */
+
+body {
+    background: linear-gradient(135deg, #e3f0ff 0%, #c9e0ff 100%);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+h2 {
+    color: #007bff;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+}
+
+.list-group-item {
+    background: #fff;
+    border: 1.5px solid #b6d4fe;
+    border-radius: 14px;
+    margin-bottom: 1rem;
+    box-shadow: 0 2px 12px rgba(0, 123, 255, 0.08);
+    transition: box-shadow 0.2s, border 0.2s;
+}
+
+.list-group-item:hover {
+    box-shadow: 0 4px 24px rgba(0, 123, 255, 0.15);
+    border-color: #007bff;
+}
+
+.list-group-item-action {
+    color: #0056b3;
+    text-decoration: none;
+}
+
+.d-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.mb-1 {
+    margin-bottom: 0.5rem !important;
+}
+
+.mt-3 {
+    margin-top: 1rem !important;
+}
+
+.container {
+    margin-top: 2.5rem;
+}
+
+small {
+    color: #6c757d;
+}
+
+@media (max-width: 768px) {
+    .list-group-item {
+        padding: 1rem 0.75rem;
+    }
+    h2 {
+        font-size: 1.5rem;
+    }
+}

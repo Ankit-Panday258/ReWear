@@ -4,72 +4,124 @@
 
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg, #f7f7f7, #e0e0e0);
+      background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+      min-height: 100vh;
+      margin: 0;
       display: flex;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      margin: 0;
     }
 
-    .login-box {
-      background: #ffc107;
-      border-radius: 30px;
-      padding: 40px 30px;
+    .auth-container {
+      width: 100vw;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .auth-card {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 32px;
+      padding: 48px 36px 32px 36px;
       width: 400px;
-      box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 8px 32px rgba(80, 0, 120, 0.15);
       position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     .avatar {
-      width: 100px;
-      height: 100px;
+      width: 96px;
+      height: 96px;
       border-radius: 50%;
       overflow: hidden;
-      margin: 0 auto 20px;
+      margin-bottom: 18px;
       display: flex;
       justify-content: center;
       align-items: center;
-      background: #ff9800;
+      background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);
+      box-shadow: 0 2px 8px rgba(80, 0, 120, 0.08);
     }
 
     .avatar img {
       width: 80%;
     }
 
-    .login-box label {
-      font-weight: bold;
+    .auth-title {
+      color: #6c3eb6;
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 24px;
+      letter-spacing: 1px;
+      text-align: center;
+    }
+
+    .input-group {
+      width: 100%;
+      margin-bottom: 18px;
+    }
+
+    .input-group label {
+      font-weight: 600;
+      color: #6c3eb6;
       display: block;
-      margin: 10px 0 5px;
+      margin-bottom: 6px;
+      font-size: 1rem;
     }
 
-    .login-box input[type="email"],
-    .login-box input[type="password"] {
+    .input-group input {
       width: 100%;
-      padding: 10px;
-      border: none;
+      padding: 12px 14px;
+      border: 1.5px solid #d1b3ff;
       border-radius: 10px;
-      background: #fff3cd;
-      font-size: 14px;
-      margin-bottom: 10px;
+      background: #f7f3ff;
+      font-size: 1rem;
+      transition: border 0.2s;
+      outline: none;
     }
 
-    .login-box button {
+    .input-group input:focus {
+      border: 1.5px solid #a18cd1;
+      background: #f3eaff;
+    }
+
+    .auth-btn {
       width: 100%;
-      background-color: #ff5722;
+      background: linear-gradient(90deg, #a18cd1 0%, #6c3eb6 100%);
       color: white;
       border: none;
-      padding: 12px;
+      padding: 14px;
       border-radius: 12px;
-      font-size: 16px;
+      font-size: 1.1rem;
       font-weight: bold;
       cursor: pointer;
-      transition: 0.3s;
+      margin-top: 8px;
+      margin-bottom: 10px;
+      box-shadow: 0 2px 8px rgba(80, 0, 120, 0.08);
+      transition: background 0.2s, box-shadow 0.2s;
     }
-    p{
-     text-align: center; 
+
+    .auth-btn:hover {
+      background: linear-gradient(90deg, #6c3eb6 0%, #a18cd1 100%);
+      box-shadow: 0 4px 16px rgba(80, 0, 120, 0.15);
+    }
+
+    .auth-switch {
+      text-align: center;
       margin-top: 10px;
+      color: #6c3eb6;
+      font-size: 1rem;
     }
-    .login-box button:hover {
-      background-color: #e64a19;
+
+    .auth-switch a {
+      color: #a18cd1;
+      text-decoration: underline;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+
+    .auth-switch a:hover {
+      color: #6c3eb6;
     }

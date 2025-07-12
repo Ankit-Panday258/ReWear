@@ -1,0 +1,12 @@
+{% extends "components/base.html" %}
+{% block title %}Swap Requests{% endblock %}
+{% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/swapreq.css') }}" />
+{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2>Swap Requests</h2>
+    <p>This page will show your incoming and outgoing swap requests.</p>
+</div>
+{% endblock %}
