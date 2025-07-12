@@ -71,6 +71,9 @@ listing.title }} - ReWear{% endblock %} {% block style %}
             <form
               method="POST"
               action="{{ url_for('listing.createSwapRequest', listing_id=listing.id) }}">
+              <!-- Hidden field for swap type -->
+              <input type="hidden" name="swap_type" value="direct_swap" />
+
               <!-- Select Item to Offer -->
               <div class="mb-4">
                 <label for="offered_item_id" class="form-label fw-bold">
