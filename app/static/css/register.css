@@ -1,0 +1,75 @@
+* {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #f7f7f7, #e0e0e0);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .login-box {
+      background: #ffc107;
+      border-radius: 30px;
+      padding: 40px 30px;
+      width: 400px;
+      box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.1);
+      position: relative;
+    }
+
+    .avatar {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin: 0 auto 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #ff9800;
+    }
+
+    .avatar img {
+      width: 80%;
+    }
+
+    .login-box label {
+      font-weight: bold;
+      display: block;
+      margin: 10px 0 5px;
+    }
+
+    .login-box input[type="email"],
+    .login-box input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      border: none;
+      border-radius: 10px;
+      background: #fff3cd;
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    .login-box button {
+      width: 100%;
+      background-color: #ff5722;
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    p{
+     text-align: center; 
+      margin-top: 10px;
+    }
+    .login-box button:hover {
+      background-color: #e64a19;
+    }
