@@ -2,15 +2,8 @@
 {% block title %}Admin Dashboard{% endblock %}
 
 {% block style %}
-<style>
-    .stat-card {
-        border-left: 5px solid #007bff;
-        margin-bottom: 1.5rem;
-    }
-    .stat-card h5 {
-        color: #007bff;
-    }
-</style>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 {% endblock %}
 
 {% block content %}
@@ -23,7 +16,7 @@
         <div class="col-md-3">
             <div class="card stat-card">
                 <div class="card-body">
-                    <h5 class="card-title">Total Users</h5>
+                    <h5 class="card-title"><i class="fa fa-users me-2"></i>Total Users</h5>
                     <p class="card-text display-4">{{ stats.total_users if stats else '0' }}</p>
                 </div>
             </div>
@@ -31,7 +24,7 @@
         <div class="col-md-3">
             <div class="card stat-card">
                 <div class="card-body">
-                    <h5 class="card-title">Total Listings</h5>
+                    <h5 class="card-title"><i class="fa fa-list me-2"></i>Total Listings</h5>
                     <p class="card-text display-4">{{ stats.total_listings if stats else '0' }}</p>
                 </div>
             </div>
@@ -39,7 +32,7 @@
         <div class="col-md-3">
             <div class="card stat-card">
                 <div class="card-body">
-                    <h5 class="card-title">Pending Listings</h5>
+                    <h5 class="card-title"><i class="fa fa-clock me-2"></i>Pending Listings</h5>
                     <p class="card-text display-4">{{ stats.pending_listings if stats else '0' }}</p>
                 </div>
             </div>
@@ -47,8 +40,39 @@
         <div class="col-md-3">
             <div class="card stat-card">
                 <div class="card-body">
-                    <h5 class="card-title">Completed Swaps</h5>
+                    <h5 class="card-title"><i class="fa fa-exchange-alt me-2"></i>Completed Swaps</h5>
                     <p class="card-text display-4">{{ stats.completed_swaps if stats else '0' }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Cards for Management -->
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Manage Listings</h5>
+                    <p class="card-text">View, approve, reject, or delete listings.</p>
+                    <a href="{{ url_for('admin.manageListings') }}" class="btn btn-primary" aria-label="Go to Listings">Go to Listings</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Manage Users</h5>
+                    <p class="card-text">View, activate, deactivate, or delete user accounts.</p>
+                    <a href="{{ url_for('admin.manageUsers') }}" class="btn btn-primary" aria-label="Go to Users">Go to Users</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h5 class="card-title">Manage Swaps</h5>
+                    <p class="card-text">View, approve, reject, complete, or delete swap requests.</p>
+                    <a href="{{ url_for('admin.manageSwaps') }}" class="btn btn-primary" aria-label="Go to Swaps">Go to Swaps</a>
                 </div>
             </div>
         </div>
@@ -60,7 +84,7 @@
             <h4>Recent Pending Listings</h4>
             {% if stats and stats.recent_pending_listings %}
                 <div class="table-responsive">
-                    <table class="table table-striped">
+                    <table class="table table-striped" aria-label="Recent Pending Listings">
                         <thead>
                             <tr>
                                 <th>Title</th>
@@ -73,16 +97,16 @@
                         <tbody>
                             {% for listing in stats.recent_pending_listings %}
                                 <tr>
-                                    <td>{{ listing.title }}</td>
+                                    <td><a href="{{ url_for('listing.showListing', listing_id=listing.id) }}">{{ listing.title }}</a></td>
                                     <td>{{ listing.category }}</td>
                                     <td>{{ listing.uploader.username }}</td>
                                     <td>{{ listing.created_at.strftime('%Y-%m-%d') }}</td>
                                     <td>
                                         <form action="{{ url_for('admin.approveListing', listing_id=listing.id) }}" method="POST" class="d-inline">
-                                            <button type="submit" class="btn btn-success btn-sm">Approve</button>
+                                            <button type="submit" class="btn btn-success btn-sm" aria-label="Approve Listing"><i class="fa fa-check"></i></button>
                                         </form>
                                         <form action="{{ url_for('admin.rejectListing', listing_id=listing.id) }}" method="POST" class="d-inline">
-                                            <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+                                            <button type="submit" class="btn btn-danger btn-sm" aria-label="Reject Listing"><i class="fa fa-times"></i></button>
                                         </form>
                                     </td>
                                 </tr>
@@ -91,7 +115,10 @@
                     </table>
                 </div>
             {% else %}
-                <p>No pending listings at the moment.</p>
+                <div class="text-center text-muted my-4">
+                    <i class="fa fa-inbox fa-2x mb-2"></i>
+                    <p>No pending listings at the moment.</p>
+                </div>
             {% endif %}
         </div>
 
@@ -101,13 +128,16 @@
                 <ul class="list-group">
                     {% for user in stats.recent_users %}
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                            {{ user.username }}
+                            <a href="#" tabindex="0">{{ user.username }}</a>
                             <span class="badge bg-primary rounded-pill">{{ user.created_at.strftime('%Y-%m-%d') }}</span>
                         </li>
                     {% endfor %}
                 </ul>
             {% else %}
-                <p>No new users recently.</p>
+                <div class="text-center text-muted my-4">
+                    <i class="fa fa-user-plus fa-2x mb-2"></i>
+                    <p>No new users recently.</p>
+                </div>
             {% endif %}
 
             <h4 class="mt-4">Listing Categories</h4>
@@ -121,7 +151,10 @@
                     {% endfor %}
                 </ul>
             {% else %}
-                <p>No category data available.</p>
+                <div class="text-center text-muted my-4">
+                    <i class="fa fa-tags fa-2x mb-2"></i>
+                    <p>No category data available.</p>
+                </div>
             {% endif %}
         </div>
     </div>

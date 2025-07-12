@@ -1,0 +1,104 @@
+
+{% extends "components/base.html" %}
+{% block title %}Manage Swaps{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin_swaps.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+{% endblock %}
+
+{% block content %}
+<a href="{{ url_for('admin.renderAdmin') }}" class="btn btn-secondary mb-3"><i class="fa fa-arrow-left"></i> Go Back</a>
+<div class="container-fluid mt-4">
+    <h1 class="h2">Manage Swaps</h1>
+    <p>View and manage all swap requests on the platform.</p>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            Filter Swaps
+        </div>
+        <div class="card-body">
+            <form class="form-inline" method="get">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search by listing title or user..." name="search">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="submit"><i class="fa fa-search"></i> Search</button>
+                        <a href="{{ url_for('admin.manageSwaps') }}" class="btn btn-outline-danger ms-2" title="Clear search"><i class="fa fa-times"></i></a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% if swaps %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover" aria-label="Swaps Table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Offered Listing</th>
+                        <th>Requested Listing</th>
+                        <th>Initiator</th>
+                        <th>Responder</th>
+                        <th>Status</th>
+                        <th>Date Requested</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for swap in swaps %}
+                        <tr>
+                            <td>{{ swap.id }}</td>
+                            <td><a href="{{ url_for('listing.showListing', listing_id=swap.offered_item.id) }}">{{ swap.offered_item.title }}</a></td>
+                            <td><a href="{{ url_for('listing.showListing', listing_id=swap.requested_item.id) }}">{{ swap.requested_item.title }}</a></td>
+                            <td>{{ swap.requester.username }}</td>
+                            <td>{{ swap.requested_item.uploader.username }}</td>
+                            <td>
+                                {% if swap.status == 'pending' %}
+                                    <span class="badge bg-warning" title="Pending"><i class="fa fa-clock"></i> Pending</span>
+                                {% elif swap.status == 'accepted' %}
+                                    <span class="badge bg-info" title="Accepted"><i class="fa fa-hourglass-half"></i> Accepted</span>
+                                {% elif swap.status == 'completed' %}
+                                    <span class="badge bg-success" title="Completed"><i class="fa fa-check"></i> Completed</span>
+                                {% elif swap.status == 'rejected' %}
+                                    <span class="badge bg-danger" title="Rejected"><i class="fa fa-times"></i> Rejected</span>
+                                {% else %}
+                                    <span class="badge bg-secondary" title="{{ swap.status }}"><i class="fa fa-info-circle"></i> {{ swap.status }}</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ swap.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                            <td>
+                                {# Uncomment and implement these actions in backend to enable #}
+                                {#
+                                {% if swap.status == 'pending' %}
+                                    <form action="{{ url_for('admin.approveSwap', swap_id=swap.id) }}" method="POST" class="d-inline">
+                                        <button type="submit" class="btn btn-success btn-sm me-1" title="Approve"><i class="fa fa-check"></i></button>
+                                    </form>
+                                    <form action="{{ url_for('admin.rejectSwap', swap_id=swap.id) }}" method="POST" class="d-inline">
+                                        <button type="submit" class="btn btn-warning btn-sm me-1" title="Reject"><i class="fa fa-times"></i></button>
+                                    </form>
+                                {% elif swap.status == 'accepted' %}
+                                    <form action="{{ url_for('admin.completeSwap', swap_id=swap.id) }}" method="POST" class="d-inline">
+                                        <button type="submit" class="btn btn-primary btn-sm me-1" title="Mark Completed"><i class="fa fa-check-double"></i></button>
+                                    </form>
+                                {% endif %}
+                                <form action="{{ url_for('admin.deleteSwap', swap_id=swap.id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this swap request?');">
+                                    <button type="submit" class="btn btn-danger btn-sm" title="Delete"><i class="fa fa-trash"></i></button>
+                                </form>
+                                #}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <!-- Pagination would go here if implemented -->
+    {% else %}
+        <div class="text-center text-muted my-4">
+            <i class="fa fa-inbox fa-2x mb-2"></i>
+            <p>No swap requests found.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+

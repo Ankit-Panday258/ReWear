@@ -1,0 +1,86 @@
+/* Admin Swaps Styles - Purple Blue Theme */
+:root {
+  --primary: #7c3aed;
+  --primary-dark: #5b21b6;
+  --secondary: #3b82f6;
+  --secondary-dark: #1e40af;
+  --bg: #f3f0ff;
+  --card-bg: #fff;
+  --text: #22223b;
+  --muted: #a0aec0;
+  --gradient: linear-gradient(90deg, #7c3aed 0%, #3b82f6 100%);
+}
+body {
+  background: var(--bg);
+  color: var(--text);
+}
+.container-fluid {
+  max-width: 1200px;
+}
+.card {
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 12px rgba(124,58,237,0.08);
+  border: 1.5px solid #ede9fe;
+}
+.card-header {
+  background: #ede9fe;
+  color: var(--primary-dark);
+  font-weight: 700;
+}
+.input-group .form-control {
+  border-radius: 0.5rem 0 0 0.5rem;
+  border: 1.5px solid #ede9fe;
+}
+.input-group-append .btn {
+  border-radius: 0 0.5rem 0.5rem 0;
+  background: var(--secondary);
+  color: #fff;
+  border: none;
+}
+.input-group-append .btn:hover, .input-group-append .btn:focus {
+  background: var(--secondary-dark);
+  color: #fff;
+}
+.table {
+  background: var(--card-bg);
+  border-radius: 0.5rem;
+  overflow: hidden;
+}
+.table th {
+  background: #ede9fe;
+  color: var(--primary-dark);
+  font-weight: 700;
+}
+.badge {
+  font-size: 0.95em;
+  padding: 0.5em 0.75em;
+  border-radius: 0.5em;
+}
+.badge.bg-warning {
+  background: #fbbf24;
+  color: #fff;
+}
+.badge.bg-success {
+  background: #22d3ee;
+  color: #fff;
+}
+.badge.bg-danger {
+  background: #a21caf;
+  color: #fff;
+}
+.badge.bg-info {
+  background: #6366f1;
+  color: #fff;
+}
+.fa-2x {
+  color: var(--primary);
+}
+.text-muted {
+  color: var(--muted) !important;
+}
+.btn {
+  transition: box-shadow 0.2s;
+}
+.btn:focus, .btn:hover {
+  box-shadow: 0 2px 8px rgba(124,58,237,0.10);
+}

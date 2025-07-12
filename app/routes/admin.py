@@ -5,6 +5,7 @@ from app.models.listings import Listing
 from app.models.swaps import SwapRequest
 from app.routes.auth import admin_required, get_current_user
 from sqlalchemy import func, desc
+from sqlalchemy.orm import joinedload # Import joinedload
 from datetime import datetime, timedelta
 
 admin = Blueprint('admin', __name__)
@@ -180,7 +181,10 @@ def manageSwaps():
     if type_filter != 'all':
         query = query.filter_by(swap_type=type_filter)
     
-    swaps = query.order_by(desc(SwapRequest.created_at)).all()
+    swaps = query.options(
+        joinedload(SwapRequest.offered_item),
+        joinedload(SwapRequest.requested_item)
+    ).order_by(desc(SwapRequest.created_at)).all()
     
     return render_template("admin/swaps.html",
                          current_user=current_user,
