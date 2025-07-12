@@ -1,0 +1,95 @@
+
+{% extends "components/base.html" %}
+{% block title %}Manage Users{% endblock %}
+
+{% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin_users.css') }}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+{% endblock %}
+
+{% block content %}
+<a href="{{ url_for('admin.renderAdmin') }}" class="btn btn-secondary mb-3"><i class="fa fa-arrow-left"></i> Go Back</a>
+<div class="container-fluid mt-4">
+    <h1 class="h2">Manage Users</h1>
+    <p>View and manage all registered users on the platform.</p>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            Filter Users
+        </div>
+        <div class="card-body">
+            <form class="form-inline" method="get">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search by username or email..." name="search">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="submit"><i class="fa fa-search"></i> Search</button>
+                        <a href="{{ url_for('admin.manageUsers') }}" class="btn btn-outline-danger ms-2" title="Clear search"><i class="fa fa-times"></i></a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    {% if users %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover" aria-label="Users Table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Admin</th>
+                        <th>Status</th>
+                        <th>Date Joined</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                        <tr>
+                            <td>{{ user.id }}</td>
+                            <td><a href="#" tabindex="0">{{ user.username }}</a></td>
+                            <td>{{ user.email }}</td>
+                            <td>
+                                {% if user.is_admin %}
+                                    <span class="badge bg-primary" title="Admin"><i class="fa fa-user-shield"></i> Yes</span>
+                                {% else %}
+                                    <span class="badge bg-secondary" title="Not Admin"><i class="fa fa-user"></i> No</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if user.is_active %}
+                                    <span class="badge bg-success" title="Active"><i class="fa fa-check"></i> Active</span>
+                                {% else %}
+                                    <span class="badge bg-danger" title="Inactive"><i class="fa fa-times"></i> Inactive</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ user.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                            <td>
+                                <form action="{{ url_for('admin.toggleUserAdmin', user_id=user.id) }}" method="POST" class="d-inline">
+                                    {% if user.is_admin %}
+                                        <button type="submit" class="btn btn-warning btn-sm me-1" title="Remove Admin"><i class="fa fa-user-slash"></i></button>
+                                    {% else %}
+                                        <button type="submit" class="btn btn-success btn-sm me-1" title="Make Admin"><i class="fa fa-user-shield"></i></button>
+                                    {% endif %}
+                                </form>
+                                {# Cannot fix url_for('admin.deleteUser') as no such endpoint exists in backend #}
+                                {# <form action="{{ url_for('admin.deleteUser', user_id=user.id) }}" method="POST" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this user? This action cannot be undone.');">
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                </form> #}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        <!-- Pagination would go here if implemented -->
+    {% else %}
+        <div class="text-center text-muted my-4">
+            <i class="fa fa-inbox fa-2x mb-2"></i>
+            <p>No users found.</p>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
