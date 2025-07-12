@@ -1,21 +1,31 @@
+{% extends 'components/base.html' %}
+
+{% block title %}Register - ReWear{% endblock %}
+
+{% block style %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/register.css') }}">
+{% endblock %}
+
+{% block content %}
 <div class="login-box">
     <div class="avatar">
         <img src="https://cdn-icons-png.flaticon.com/512/2922/2922510.png" alt="avatar">
     </div>
-    <form>
+    <form method="POST" action="{{ url_for('auth.register') }}">
         <label for="email">Email</label>
-        <input type="email" id="email" placeholder="Email" required>
+        <input type="email" id="email" name="email" placeholder="Email" required>
 
         <label for="username">Username</label>
-        <input type="text" id="username" placeholder="Username" required>
+        <input type="text" id="username" name="username" placeholder="Username" required>
 
         <label for="password">Password</label>
-        <input type="password" id="password" placeholder="Enter password" required>
+        <input type="password" id="password" name="password" placeholder="Enter password" required>
 
         <label for="confirm-password">Confirm password</label>
-        <input type="password" id="confirm-password" placeholder="Confirm password" required>
+        <input type="password" id="confirm-password" name="confirm_password" placeholder="Confirm password" required>
 
         <button type="submit">Create Account</button>
-        <p>Already have an account? <a href="#">Login</a></p>
+        <p>Already have an account? <a href="{{ url_for('auth.login') }}">Login</a></p>
     </form>
 </div>
+{% endblock %}
