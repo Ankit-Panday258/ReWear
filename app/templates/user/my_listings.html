@@ -1,27 +1,149 @@
 {% extends "components/base.html" %}
-{% block title %}My Listings{% endblock %}
+{% block title %}My Listings - ReWear{% endblock %}
 {% block style %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/my_listings.css') }}" />
+<style>
+  .filter-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .listing-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    transition: transform 0.2s;
+  }
+  .listing-card:hover {
+    transform: translateY(-2px);
+  }
+  .status-badge {
+    font-size: 0.8rem;
+    padding: 4px 8px;
+    border-radius: 20px;
+  }
+  .status-approved {
+    background-color: #d4edda;
+    color: #155724;
+  }
+  .status-pending {
+    background-color: #fff3cd;
+    color: #856404;
+  }
+  .status-available {
+    background-color: #d1ecf1;
+    color: #0c5460;
+  }
+  .status-unavailable {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
+</style>
 {% endblock %}
 
 {% block content %}
-<div class="container mt-5">
-    <h2>My Listings</h2>
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2><i class="fas fa-list me-2"></i>My Listings</h2>
+        <a href="{{ url_for('listing.renderNewPage') }}" class="btn btn-primary">
+            <i class="fas fa-plus me-1"></i>Add New Listing
+        </a>
+    </div>
+    
+    <!-- Filters -->
+    <div class="filter-card">
+        <form method="GET" action="{{ url_for('user.myListings') }}">
+            <div class="row">
+                <div class="col-md-4">
+                    <label for="status" class="form-label">Filter by Status</label>
+                    <select name="status" id="status" class="form-select" onchange="this.form.submit()">
+                        <option value="all" {% if status_filter == 'all' %}selected{% endif %}>All Statuses</option>
+                        <option value="approved" {% if status_filter == 'approved' %}selected{% endif %}>Approved</option>
+                        <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Pending Approval</option>
+                        <option value="available" {% if status_filter == 'available' %}selected{% endif %}>Available</option>
+                        <option value="unavailable" {% if status_filter == 'unavailable' %}selected{% endif %}>Unavailable</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="category" class="form-label">Filter by Category</label>
+                    <select name="category" id="category" class="form-select" onchange="this.form.submit()">
+                        <option value="all" {% if category_filter == 'all' %}selected{% endif %}>All Categories</option>
+                        {% for category in categories %}
+                        <option value="{{ category }}" {% if category_filter == category %}selected{% endif %}>{{ category }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="col-md-4 d-flex align-items-end">
+                    <a href="{{ url_for('user.myListings') }}" class="btn btn-outline-secondary">Clear Filters</a>
+                </div>
+            </div>
+        </form>
+    </div>
+
+    <!-- Listings -->
     {% if my_listings %}
-        <div class="list-group mt-3">
+        <div class="row">
             {% for listing in my_listings %}
-                <a href="#" class="list-group-item list-group-item-action">
-                    <div class="d-flex w-100 justify-content-between">
-                        <h5 class="mb-1">{{ listing.title }}</h5>
-                        <small>{{ listing.status }}</small>
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="listing-card">
+                    <img src="{{ listing.image_url }}" class="card-img-top" alt="{{ listing.title }}" 
+                         style="height: 200px; object-fit: cover; border-radius: 12px 12px 0 0;">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h5 class="card-title mb-0">{{ listing.title }}</h5>
+                            <span class="status-badge 
+                                {% if listing.is_approved and listing.is_available %}status-available
+                                {% elif listing.is_approved and not listing.is_available %}status-unavailable
+                                {% elif not listing.is_approved %}status-pending
+                                {% else %}status-approved
+                                {% endif %}">
+                                {% if listing.is_approved and listing.is_available %}Available
+                                {% elif listing.is_approved and not listing.is_available %}Unavailable
+                                {% elif not listing.is_approved %}Pending
+                                {% else %}{{ listing.status }}
+                                {% endif %}
+                            </span>
+                        </div>
+                        <p class="card-text text-muted small mb-2">{{ listing.description[:100] }}{% if listing.description|length > 100 %}...{% endif %}</p>
+                        <div class="mb-2">
+                            <small class="text-muted">
+                                <i class="fas fa-tag me-1"></i>{{ listing.category }} - {{ listing.type }}<br>
+                                <i class="fas fa-expand-arrows-alt me-1"></i>Size: {{ listing.size }}<br>
+                                <i class="fas fa-star me-1"></i>Condition: {{ listing.condition }}<br>
+                                <i class="fas fa-coins me-1"></i>Worth: {{ listing.point_value }} points
+                            </small>
+                        </div>
+                        <div class="d-flex gap-2">
+                            <a href="{{ url_for('listing.showListing', listing_id=listing.id) }}" 
+                               class="btn btn-primary btn-sm flex-fill">
+                                <i class="fas fa-eye me-1"></i>View
+                            </a>
+                        </div>
+                        <small class="text-muted">
+                            <i class="fas fa-calendar me-1"></i>Listed on {{ listing.created_at.strftime('%b %d, %Y') }}
+                        </small>
                     </div>
-                    <p class="mb-1">{{ listing.description }}</p>
-                    <small>Category: {{ listing.category }} | Size: {{ listing.size }}</small>
-                </a>
+                </div>
+            </div>
             {% endfor %}
         </div>
     {% else %}
-        <p class="mt-3">You haven't listed any items yet.</p>
+        <div class="text-center py-5">
+            <i class="fas fa-tshirt fa-3x text-muted mb-3"></i>
+            <h4 class="text-muted">No listings found</h4>
+            <p class="text-muted">
+                {% if status_filter != 'all' or category_filter != 'all' %}
+                    Try adjusting your filters to see more listings.
+                {% else %}
+                    You haven't listed any items yet. Start by adding your first listing!
+                {% endif %}
+            </p>
+            <a href="{{ url_for('listing.renderNewPage') }}" class="btn btn-primary">
+                <i class="fas fa-plus me-1"></i>Add Your First Listing
+            </a>
+        </div>
     {% endif %}
 </div>
 {% endblock %}

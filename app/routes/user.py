@@ -60,13 +60,17 @@ def myListings():
     if category_filter != 'all':
         query = query.filter_by(category=category_filter)
     
-    listings = query.order_by(Listing.created_at.desc()).all()
+    my_listings = query.order_by(Listing.created_at.desc()).all()
+    
+    # Get available categories for filter dropdown
+    categories = ['Men', 'Women', 'Kids']
     
     return render_template("user/my_listings.html", 
-                         listings=listings, 
+                         my_listings=my_listings, 
                          current_user=current_user,
                          status_filter=status_filter,
-                         category_filter=category_filter)
+                         category_filter=category_filter,
+                         categories=categories)
 
 @user.route("/my-swaps")
 @login_required
@@ -79,13 +83,20 @@ def mySwaps():
     ).order_by(SwapRequest.created_at.desc()).all()
     
     # Get swap requests for user's items (incoming)
-    incoming_swaps = SwapRequest.query.join(Listing).filter(
-        Listing.uploader_id == current_user.user_id
+    incoming_swaps = SwapRequest.query.join(
+        Listing, SwapRequest.requested_item_id == Listing.id
+    ).filter(
+        Listing.uploader_id == current_user.user_id,
+        SwapRequest.requester_id != current_user.user_id  
     ).order_by(SwapRequest.created_at.desc()).all()
+    
+    # For compatibility with template, use my_purchases for outgoing swaps
+    my_purchases = outgoing_swaps
     
     return render_template("user/my_swaps.html", 
                          outgoing_swaps=outgoing_swaps,
                          incoming_swaps=incoming_swaps,
+                         my_purchases=my_purchases,
                          current_user=current_user)
 
 @user.route("/swap-requests")
@@ -114,37 +125,96 @@ def userPoints():
         'user_id': current_user.user_id
     })
 
-@user.route("/dashboard")
-@login_required 
-def dashboard():
-    """User dashboard with overview"""
+@user.route("/api/swaps/<swap_id>/accept", methods=['POST'])
+@login_required
+def acceptSwap(swap_id):
+    """Accept an incoming swap request"""
     current_user = get_current_user()
     
-    # Recent listings
-    recent_listings = Listing.query.filter_by(
-        uploader_id=current_user.user_id
-    ).order_by(Listing.created_at.desc()).limit(5).all()
+    # Find the swap request
+    swap = SwapRequest.query.get_or_404(swap_id)
     
-    # Recent swap activity
-    recent_swaps = SwapRequest.query.filter(
-        or_(
-            SwapRequest.requester_id == current_user.user_id,
-            SwapRequest.requested_item.has(uploader_id=current_user.user_id)
-        )
-    ).order_by(SwapRequest.created_at.desc()).limit(5).all()
+    # Verify the current user owns the requested item
+    if swap.requested_item.uploader_id != current_user.user_id:
+        return jsonify({'success': False, 'error': 'Unauthorized'}), 403
     
-    # Pending requests for user's items
-    pending_requests = SwapRequest.query.join(Listing).filter(
-        Listing.uploader_id == current_user.user_id,
-        SwapRequest.status == 'Pending'
-    ).count()
+    # Verify swap is pending
+    if swap.status != 'Pending':
+        return jsonify({'success': False, 'error': 'Swap is no longer pending'}), 400
     
-    dashboard_data = {
-        'recent_listings': recent_listings,
-        'recent_swaps': recent_swaps,
-        'pending_requests': pending_requests
-    }
+    try:
+        # Accept the swap
+        swap.accept()
+        
+        # Mark the requested item as unavailable
+        swap.requested_item.is_available = False
+        swap.requested_item.status = 'Swapped'
+        
+        # If it's a direct swap, mark the offered item as unavailable
+        if swap.swap_type == 'direct_swap' and swap.offered_item:
+            swap.offered_item.is_available = False
+            swap.offered_item.status = 'Swapped'
+        
+        # Handle point redemption
+        if swap.swap_type == 'point_redemption':
+            # Deduct points from requester
+            swap.requester.points -= swap.points_used
+            # Add points to item owner
+            current_user.points += swap.points_used
+        
+        db.session.commit()
+        return jsonify({'success': True, 'message': 'Swap accepted successfully'})
     
-    return render_template("user/dashboard.html", 
-                         current_user=current_user,
-                         data=dashboard_data)
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@user.route("/api/swaps/<swap_id>/reject", methods=['POST'])
+@login_required
+def rejectSwap(swap_id):
+    """Reject an incoming swap request"""
+    current_user = get_current_user()
+    
+    # Find the swap request
+    swap = SwapRequest.query.get_or_404(swap_id)
+    
+    # Verify the current user owns the requested item
+    if swap.requested_item.uploader_id != current_user.user_id:
+        return jsonify({'success': False, 'error': 'Unauthorized'}), 403
+    
+    # Verify swap is pending
+    if swap.status != 'Pending':
+        return jsonify({'success': False, 'error': 'Swap is no longer pending'}), 400
+    
+    try:
+        swap.reject()
+        return jsonify({'success': True, 'message': 'Swap rejected'})
+    
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@user.route("/api/swaps/<swap_id>/cancel", methods=['POST'])
+@login_required
+def cancelSwap(swap_id):
+    """Cancel an outgoing swap request"""
+    current_user = get_current_user()
+    
+    # Find the swap request
+    swap = SwapRequest.query.get_or_404(swap_id)
+    
+    # Verify the current user made this request
+    if swap.requester_id != current_user.user_id:
+        return jsonify({'success': False, 'error': 'Unauthorized'}), 403
+    
+    # Verify swap is pending
+    if swap.status != 'Pending':
+        return jsonify({'success': False, 'error': 'Swap is no longer pending'}), 400
+    
+    try:
+        swap.cancel()
+        return jsonify({'success': True, 'message': 'Swap cancelled'})
+    
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'success': False, 'error': str(e)}), 500

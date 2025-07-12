@@ -1,61 +1,275 @@
-/* Blue Theme for Profile Page */
+/* Enhanced Blue Theme for Profile Page */
 
 body {
-    background: linear-gradient(135deg, #e3f0ff 0%, #c9e0ff 100%);
-    font-family: 'Plus Jakarta Sans', sans-serif;
+  background: linear-gradient(135deg, #e3f0ff 0%, #c9e0ff 100%);
+  font-family: "Plus Jakarta Sans", sans-serif;
+}
+
+/* Profile Header Card */
+.profile-header-card {
+  border: none;
+  border-radius: 18px;
+  box-shadow: 0 8px 40px rgba(0, 123, 255, 0.12);
+  background: #ffffff;
+  overflow: hidden;
+}
+
+.profile-header-card .card-body {
+  padding: 2.5rem;
 }
 
 .profile-avatar {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #007bff 60%, #0056b3 100%);
-    color: #fff;
-    font-size: 48px;
-    line-height: 100px;
-    margin: 0 auto 1rem auto;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 4px 16px rgba(0, 123, 255, 0.15);
-    border: 4px solid #fff;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+  color: #fff;
+  font-size: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 24px rgba(0, 123, 255, 0.2);
+  border: 5px solid #fff;
+  margin: 0 auto;
 }
 
+.profile-info {
+  padding-left: 1rem;
+}
+
+.profile-username {
+  color: #0056b3;
+  font-weight: 700;
+  font-size: 2.2rem;
+  margin-bottom: 0.5rem;
+}
+
+.profile-email {
+  color: #495057;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+}
+
+.profile-join-date {
+  color: #6c757d;
+  font-size: 0.95rem;
+  margin-bottom: 1rem;
+}
+
+.profile-join-date i {
+  margin-right: 0.5rem;
+  color: #007bff;
+}
+
+.points-badge {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 50px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  box-shadow: 0 4px 16px rgba(40, 167, 69, 0.2);
+}
+
+.points-badge i {
+  margin-right: 0.5rem;
+  font-size: 1.1em;
+}
+
+.points-value {
+  font-size: 1.2em;
+  font-weight: 700;
+}
+
+/* Statistics Cards */
+.stat-card {
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 123, 255, 0.08);
+  background: #ffffff;
+  transition: all 0.3s ease;
+  height: 100%;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 30px rgba(0, 123, 255, 0.15);
+}
+
+.stat-card .card-body {
+  padding: 2rem 1.5rem;
+}
+
+.stat-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem auto;
+  font-size: 1.5rem;
+}
+
+.stat-icon.approved {
+  background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+}
+
+.stat-icon.completed {
+  background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+}
+
+.stat-icon.points {
+  background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%);
+}
+
+.stat-number {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #0056b3;
+  margin-bottom: 0.5rem;
+}
+
+.stat-label {
+  color: #6c757d;
+  font-weight: 500;
+  margin-bottom: 0;
+  font-size: 0.95rem;
+}
+
+/* Quick Actions Card */
 .card {
-    border: none;
-    border-radius: 18px;
-    box-shadow: 0 6px 32px rgba(0, 123, 255, 0.10);
-    background: #ffffffcc;
-    margin-top: 2rem;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 123, 255, 0.08);
+  background: #ffffff;
+}
+
+.card-header {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-bottom: 1px solid #dee2e6;
+  border-radius: 15px 15px 0 0 !important;
+  padding: 1.5rem;
+}
+
+.card-header h5 {
+  color: #0056b3;
+  font-weight: 600;
+  margin-bottom: 0;
+}
+
+.card-header i {
+  margin-right: 0.5rem;
+  color: #007bff;
 }
 
 .card-body {
-    padding: 2.5rem 2rem;
+  padding: 2rem;
 }
 
-.card-title {
-    color: #0056b3;
-    font-weight: 700;
-    margin-bottom: 0.5rem;
+/* Quick Action Buttons */
+.btn {
+  border-radius: 12px;
+  font-weight: 600;
+  padding: 1rem 1.5rem;
+  transition: all 0.3s ease;
+  text-decoration: none;
 }
 
-.card-text {
-    color: #333;
-    font-size: 1.1rem;
+.btn-outline-primary {
+  border: 2px solid #007bff;
+  color: #007bff;
 }
 
-.text-muted {
-    color: #6c757d !important;
+.btn-outline-primary:hover {
+  background: #007bff;
+  border-color: #007bff;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 123, 255, 0.3);
 }
 
+.btn-outline-success {
+  border: 2px solid #28a745;
+  color: #28a745;
+}
+
+.btn-outline-success:hover {
+  background: #28a745;
+  border-color: #28a745;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(40, 167, 69, 0.3);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+  border: none;
+}
+
+.btn-primary:hover {
+  background: linear-gradient(135deg, #0056b3 0%, #004085 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 123, 255, 0.4);
+}
+
+/* Responsive Design */
 @media (max-width: 768px) {
-    .card-body {
-        padding: 1.5rem 1rem;
-    }
-    .profile-avatar {
-        width: 80px;
-        height: 80px;
-        font-size: 36px;
-        line-height: 80px;
-    }
+  .profile-header-card .card-body {
+    padding: 1.5rem;
+  }
+
+  .profile-avatar {
+    width: 100px;
+    height: 100px;
+    font-size: 42px;
+  }
+
+  .profile-info {
+    padding-left: 0;
+    text-align: center;
+    margin-top: 1rem;
+  }
+
+  .profile-username {
+    font-size: 1.8rem;
+  }
+
+  .stat-card .card-body {
+    padding: 1.5rem 1rem;
+  }
+
+  .stat-number {
+    font-size: 2rem;
+  }
+
+  .card-body {
+    padding: 1.5rem;
+  }
+
+  .btn {
+    padding: 0.875rem 1.25rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .profile-header-card .card-body {
+    padding: 1rem;
+  }
+
+  .profile-avatar {
+    width: 80px;
+    height: 80px;
+    font-size: 32px;
+  }
+
+  .profile-username {
+    font-size: 1.6rem;
+  }
+
+  .points-badge {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
 }

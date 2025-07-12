@@ -1,27 +1,344 @@
-{% extends "components/base.html" %}
-{% block title %}My Swaps{% endblock %}
-{% block style %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/my_swaps.css') }}" />
-{% endblock %}
+{% extends "components/base.html" %} {% block title %}My Swaps - ReWear{%
+endblock %} {% block style %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/my_swaps.css') }}" />
+<style>
+  .swap-card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+  }
+  .swap-card:hover {
+    transform: translateY(-2px);
+  }
+  .status-badge {
+    font-size: 0.8rem;
+    padding: 4px 8px;
+    border-radius: 20px;
+  }
+  .status-pending {
+    background-color: #fff3cd;
+    color: #856404;
+  }
+  .status-accepted {
+    background-color: #d4edda;
+    color: #155724;
+  }
+  .status-rejected {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
+  .status-cancelled {
+    background-color: #e2e3e5;
+    color: #6c757d;
+  }
+  .swap-section {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  .item-preview {
+    background: white;
+    border-radius: 8px;
+    padding: 15px;
+    border: 1px solid #e9ecef;
+  }
+</style>
+{% endblock %} {% block content %}
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2><i class="fas fa-exchange-alt me-2"></i>My Swaps</h2>
+    <a href="{{ url_for('listing.index') }}" class="btn btn-primary">
+      <i class="fas fa-search me-1"></i>Browse Items
+    </a>
+  </div>
 
-{% block content %}
-<div class="container mt-5">
-    <h2>My Swaps</h2>
-    {% if my_purchases %}
-        <div class="list-group mt-3">
-            {% for purchase in my_purchases %}
-                <div class="list-group-item">
-                    <div class="d-flex w-100 justify-content-between">
-                        <h5 class="mb-1">{{ purchase.requested_item.title }}</h5>
-                        <small>Swapped on: {{ purchase.updated_at.strftime('%b %d, %Y') }}</small>
-                    </div>
-                    <p class="mb-1">A great addition to your collection!</p>
-                    <small>Status: {{ purchase.status }}</small>
+  <!-- Outgoing Swaps (Requests I Made) -->
+  <div class="swap-section">
+    <h4 class="mb-3">
+      <i class="fas fa-arrow-right me-2 text-primary"></i>
+      My Swap Requests
+    </h4>
+    {% if outgoing_swaps %}
+    <div class="row">
+      {% for swap in outgoing_swaps %}
+      <div class="col-md-6 col-lg-4 mb-3">
+        <div class="swap-card">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+              <h6 class="card-title mb-0">Requesting:</h6>
+              <span class="status-badge status-{{ swap.status.lower() }}">
+                {{ swap.status }}
+              </span>
+            </div>
+
+            <!-- Requested Item -->
+            <div class="item-preview mb-3">
+              <div class="d-flex gap-2">
+                <img
+                  src="{{ swap.requested_item.image_url }}"
+                  alt="{{ swap.requested_item.title }}"
+                  style="
+                    width: 50px;
+                    height: 50px;
+                    object-fit: cover;
+                    border-radius: 6px;
+                  " />
+                <div class="flex-grow-1">
+                  <h6 class="mb-1">{{ swap.requested_item.title }}</h6>
+                  <small class="text-muted">
+                    {{ swap.requested_item.category }} - {{
+                    swap.requested_item.size }}
+                  </small>
                 </div>
-            {% endfor %}
+              </div>
+            </div>
+
+            <!-- Offered Item or Points -->
+            <div class="mb-3">
+              {% if swap.swap_type == 'direct_swap' and swap.offered_item %}
+              <small class="text-muted">Offering:</small>
+              <div class="item-preview">
+                <div class="d-flex gap-2">
+                  <img
+                    src="{{ swap.offered_item.image_url }}"
+                    alt="{{ swap.offered_item.title }}"
+                    style="
+                      width: 40px;
+                      height: 40px;
+                      object-fit: cover;
+                      border-radius: 4px;
+                    " />
+                  <div>
+                    <small class="fw-bold">{{ swap.offered_item.title }}</small
+                    ><br />
+                    <small class="text-muted"
+                      >{{ swap.offered_item.category }}</small
+                    >
+                  </div>
+                </div>
+              </div>
+              {% elif swap.swap_type == 'point_redemption' %}
+              <small class="text-muted">Using:</small>
+              <div class="text-center py-2">
+                <i class="fas fa-coins text-warning"></i>
+                <strong>{{ swap.points_used }} Points</strong>
+              </div>
+              {% endif %}
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center">
+              <small class="text-muted">
+                {{ swap.created_at.strftime('%b %d, %Y') }}
+              </small>
+              {% if swap.status == 'Pending' %}
+              <button
+                class="btn btn-outline-danger btn-sm"
+                onclick="cancelSwap('{{ swap.id }}')">
+                <i class="fas fa-times me-1"></i>Cancel
+              </button>
+              {% endif %}
+            </div>
+          </div>
         </div>
+      </div>
+      {% endfor %}
+    </div>
     {% else %}
-        <p class="mt-3">You haven't made any swaps yet.</p>
+    <div class="text-center py-4">
+      <i class="fas fa-arrow-right fa-2x text-muted mb-2"></i>
+      <p class="text-muted">You haven't made any swap requests yet.</p>
+      <a href="{{ url_for('listing.index') }}" class="btn btn-outline-primary">
+        <i class="fas fa-search me-1"></i>Browse Items to Swap
+      </a>
+    </div>
     {% endif %}
+  </div>
+
+  <!-- Incoming Swaps (Requests for My Items) -->
+  <div class="swap-section">
+    <h4 class="mb-3">
+      <i class="fas fa-arrow-left me-2 text-success"></i>
+      Requests for My Items
+    </h4>
+    {% if incoming_swaps %}
+    <div class="row">
+      {% for swap in incoming_swaps %}
+      <div class="col-md-6 col-lg-4 mb-3">
+        <div class="swap-card">
+          <div class="card-body">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+              <h6 class="card-title mb-0">For Your Item:</h6>
+              <span class="status-badge status-{{ swap.status.lower() }}">
+                {{ swap.status }}
+              </span>
+            </div>
+
+            <!-- Your Item Being Requested -->
+            <div class="item-preview mb-3">
+              <div class="d-flex gap-2">
+                <img
+                  src="{{ swap.requested_item.image_url }}"
+                  alt="{{ swap.requested_item.title }}"
+                  style="
+                    width: 50px;
+                    height: 50px;
+                    object-fit: cover;
+                    border-radius: 6px;
+                  " />
+                <div class="flex-grow-1">
+                  <h6 class="mb-1">{{ swap.requested_item.title }}</h6>
+                  <small class="text-muted">
+                    {{ swap.requested_item.category }} - {{
+                    swap.requested_item.size }}
+                  </small>
+                </div>
+              </div>
+            </div>
+
+            <!-- What they're offering -->
+            <div class="mb-3">
+              <small class="text-muted"
+                >{{ swap.requester.username }} is offering:</small
+              >
+              {% if swap.swap_type == 'direct_swap' and swap.offered_item %}
+              <div class="item-preview">
+                <div class="d-flex gap-2">
+                  <img
+                    src="{{ swap.offered_item.image_url }}"
+                    alt="{{ swap.offered_item.title }}"
+                    style="
+                      width: 40px;
+                      height: 40px;
+                      object-fit: cover;
+                      border-radius: 4px;
+                    " />
+                  <div>
+                    <small class="fw-bold">{{ swap.offered_item.title }}</small
+                    ><br />
+                    <small class="text-muted"
+                      >{{ swap.offered_item.category }}</small
+                    >
+                  </div>
+                </div>
+              </div>
+              {% elif swap.swap_type == 'point_redemption' %}
+              <div class="text-center py-2">
+                <i class="fas fa-coins text-warning"></i>
+                <strong>{{ swap.points_used }} Points</strong>
+              </div>
+              {% endif %}
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center">
+              <small class="text-muted">
+                {{ swap.created_at.strftime('%b %d, %Y') }}
+              </small>
+              {% if swap.status == 'Pending' %}
+              <div class="btn-group btn-group-sm">
+                <button
+                  class="btn btn-success"
+                  onclick="acceptSwap('{{ swap.id }}')">
+                  <i class="fas fa-check"></i>
+                </button>
+                <button
+                  class="btn btn-danger"
+                  onclick="rejectSwap('{{ swap.id }}')">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="text-center py-4">
+      <i class="fas fa-arrow-left fa-2x text-muted mb-2"></i>
+      <p class="text-muted">No one has requested your items yet.</p>
+      <a
+        href="{{ url_for('listing.renderNewPage') }}"
+        class="btn btn-outline-success">
+        <i class="fas fa-plus me-1"></i>Add More Listings
+      </a>
+    </div>
+    {% endif %}
+  </div>
 </div>
+
+<script>
+  function cancelSwap(swapId) {
+    if (confirm("Are you sure you want to cancel this swap request?")) {
+      fetch(`/api/swaps/${swapId}/cancel`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            location.reload();
+          } else {
+            alert("Error cancelling swap request");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          alert("Error cancelling swap request");
+        });
+    }
+  }
+
+  function acceptSwap(swapId) {
+    if (confirm("Accept this swap request?")) {
+      fetch(`/api/swaps/${swapId}/accept`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            location.reload();
+          } else {
+            alert("Error accepting swap request");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          alert("Error accepting swap request");
+        });
+    }
+  }
+
+  function rejectSwap(swapId) {
+    if (confirm("Reject this swap request?")) {
+      fetch(`/api/swaps/${swapId}/reject`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            location.reload();
+          } else {
+            alert("Error rejecting swap request");
+          }
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          alert("Error rejecting swap request");
+        });
+    }
+  }
+</script>
 {% endblock %}
