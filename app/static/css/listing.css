@@ -1,0 +1,673 @@
+/* ReWear Fashion Listing Page Styles */
+
+/* Color Variables */
+:root {
+  --primary-blue: #3b82f6;
+  --secondary-purple: #8b5cf6;
+  --accent-pink: #ec4899;
+  --gradient-primary: linear-gradient(135deg, #3b82f6, #8b5cf6);
+  --gradient-secondary: linear-gradient(135deg, #8b5cf6, #ec4899);
+  --text-dark: #1f2937;
+  --text-light: #6b7280;
+  --background-light: #f8fafc;
+  --border-light: rgba(59, 130, 246, 0.1);
+  --shadow-light: rgba(59, 130, 246, 0.08);
+  --shadow-hover: rgba(59, 130, 246, 0.15);
+}
+
+/* Page Header */
+.section-header {
+  text-align: center !important;
+  margin-bottom: 2rem !important;
+  padding: 2rem 0 !important;
+}
+
+.page-title {
+  background: var(--gradient-primary) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+  font-weight: 700 !important;
+  font-size: 2.5rem !important;
+  margin-bottom: 0.5rem !important;
+  line-height: 1.2 !important;
+}
+
+.page-subtitle {
+  color: var(--text-light) !important;
+  font-size: 1.1rem !important;
+  margin: 0 !important;
+  max-width: 600px !important;
+  margin: 0 auto !important;
+}
+
+.section-title {
+  color: var(--text-dark) !important;
+  font-weight: 600 !important;
+  font-size: 1.75rem !important;
+}
+
+/* Enhanced Carousel */
+.carousel {
+  border-radius: 16px !important;
+  overflow: hidden !important;
+  box-shadow: 0 8px 32px var(--shadow-light) !important;
+}
+
+.carousel-caption {
+  background: rgba(0, 0, 0, 0.4) !important;
+  border-radius: 12px !important;
+  backdrop-filter: blur(10px) !important;
+  padding: 1.5rem !important;
+  bottom: 2rem !important;
+  left: 50% !important;
+  right: auto !important;
+  transform: translateX(-50%) !important;
+  max-width: 500px !important;
+}
+
+.carousel-caption h3 {
+  color: white !important;
+  font-size: 1.5rem !important;
+  margin-bottom: 0.5rem !important;
+}
+
+.carousel-caption p {
+  color: rgba(255, 255, 255, 0.9) !important;
+  margin: 0 !important;
+}
+
+/* Stats Container */
+.stats-container {
+  display: flex !important;
+  justify-content: center !important;
+  gap: 2rem !important;
+  flex-wrap: wrap !important;
+  background: white !important;
+  padding: 2rem !important;
+  border-radius: 16px !important;
+  border: 1px solid var(--border-light) !important;
+  box-shadow: 0 4px 20px var(--shadow-light) !important;
+}
+
+.stat-item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 1rem !important;
+  padding: 1rem 1.5rem !important;
+  background: var(--background-light) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06) !important;
+  transition: all 0.3s ease !important;
+}
+
+.stat-item:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.12) !important;
+}
+
+.stat-icon {
+  font-size: 1.8rem !important;
+  background: var(--gradient-primary) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+
+.stat-content {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+}
+
+.stat-number {
+  font-size: 1.8rem !important;
+  font-weight: 700 !important;
+  color: var(--text-dark) !important;
+  line-height: 1 !important;
+}
+
+.stat-label {
+  font-size: 0.875rem !important;
+  color: var(--text-light) !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  font-weight: 500 !important;
+}
+
+/* Category Grid */
+.category-grid {
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr) !important;
+  gap: 1rem !important;
+}
+
+@media (min-width: 576px) {
+  .category-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .category-grid {
+    grid-template-columns: repeat(6, 1fr) !important;
+  }
+}
+
+.category-card {
+  position: relative !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
+  aspect-ratio: 4/3 !important;
+  cursor: pointer !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  box-shadow: 0 4px 12px var(--shadow-light) !important;
+}
+
+.category-card:hover {
+  transform: translateY(-4px) !important;
+  box-shadow: 0 12px 28px var(--shadow-hover) !important;
+}
+
+.category-img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  transition: transform 0.3s ease !important;
+}
+
+.category-card:hover .category-img {
+  transform: scale(1.1) !important;
+}
+
+.category-overlay {
+  position: absolute !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.8),
+    transparent
+  ) !important;
+  padding: 1rem 0.75rem 0.75rem !important;
+  color: white !important;
+}
+
+.category-title {
+  font-weight: 600 !important;
+  font-size: 0.9rem !important;
+  margin: 0 0 0.25rem 0 !important;
+}
+
+.category-count {
+  font-size: 0.75rem !important;
+  margin: 0 !important;
+  opacity: 0.9 !important;
+}
+
+/* Button Styles */
+.btn-outline-primary-fashion {
+  background: transparent !important;
+  color: var(--primary-blue) !important;
+  border: 2px solid var(--primary-blue) !important;
+  border-radius: 25px !important;
+  padding: 0.75rem 2rem !important;
+  font-weight: 600 !important;
+  font-size: 1rem !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  text-decoration: none !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.btn-outline-primary-fashion::before {
+  content: "" !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: -100% !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: var(--gradient-primary) !important;
+  transition: left 0.3s ease !important;
+  z-index: -1 !important;
+}
+
+.btn-outline-primary-fashion:hover::before {
+  left: 0 !important;
+}
+
+.btn-outline-primary-fashion:hover {
+  color: white !important;
+  border-color: var(--primary-blue) !important;
+  transform: translateY(-2px) !important;
+  box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3) !important;
+}
+
+/* Fashion Grid */
+.fashion-grid {
+  display: grid !important;
+  grid-template-columns: repeat(1, 1fr) !important;
+  gap: 1.5rem !important;
+  margin-top: 2rem !important;
+}
+
+@media (min-width: 576px) {
+  .fashion-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (min-width: 768px) {
+  .fashion-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .fashion-grid {
+    grid-template-columns: repeat(4, 1fr) !important;
+  }
+}
+
+/* Fashion Cards */
+.fashion-card {
+  background: #ffffff !important;
+  border-radius: 16px !important;
+  overflow: hidden !important;
+  box-shadow: 0 4px 20px var(--shadow-light) !important;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  border: 1px solid var(--border-light) !important;
+  position: relative !important;
+  height: 100% !important;
+  display: flex !important;
+  flex-direction: column !important;
+}
+
+.fashion-card:hover {
+  box-shadow: 0 12px 30px var(--shadow-hover) !important;
+  border-color: rgba(59, 130, 246, 0.3) !important;
+}
+
+/* Image Container */
+.fashion-card-img-container {
+  position: relative !important;
+  width: 100% !important;
+  aspect-ratio: 4/3 !important;
+  overflow: hidden !important;
+  background: var(--background-light) !important;
+}
+
+.fashion-card-img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.fashion-card:hover .fashion-card-img {
+  transform: scale(1.05) !important;
+}
+
+/* Fashion Badges */
+.fashion-badges {
+  position: absolute !important;
+  top: 0.75rem !important;
+  left: 0.75rem !important;
+  z-index: 10 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.5rem !important;
+}
+
+.badge {
+  display: inline-flex !important;
+  align-items: center !important;
+  padding: 0.25rem 0.75rem !important;
+  font-size: 0.75rem !important;
+  font-weight: 600 !important;
+  border-radius: 12px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+.badge-men {
+  background: rgba(59, 130, 246, 0.9) !important;
+  color: white !important;
+}
+
+.badge-women {
+  background: rgba(236, 72, 153, 0.9) !important;
+  color: white !important;
+}
+
+.badge-kids {
+  background: rgba(139, 92, 246, 0.9) !important;
+  color: white !important;
+}
+
+.badge-type {
+  background: rgba(255, 255, 255, 0.9) !important;
+  color: var(--text-dark) !important;
+  border: 1px solid rgba(59, 130, 246, 0.2) !important;
+}
+
+/* Card Body */
+.fashion-card-body {
+  padding: 1.25rem !important;
+  flex: 1 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.75rem !important;
+}
+
+.fashion-card-title {
+  color: var(--text-dark) !important;
+  font-weight: 600 !important;
+  font-size: 1.25rem !important;
+  line-height: 1.4 !important;
+  margin: 0 !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+}
+
+.fashion-description {
+  color: var(--text-light) !important;
+  font-size: 0.875rem !important;
+  line-height: 1.5 !important;
+  margin: 0 !important;
+  display: -webkit-box !important;
+  -webkit-line-clamp: 2 !important;
+  line-clamp: 2 !important;
+  -webkit-box-orient: vertical !important;
+  overflow: hidden !important;
+}
+
+/* Fashion Info */
+.fashion-info {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0.5rem !important;
+  margin-top: 0.5rem !important;
+}
+
+.info-item {
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  font-size: 0.875rem !important;
+  color: var(--text-light) !important;
+}
+
+.info-item i {
+  color: var(--primary-blue) !important;
+  width: 12px !important;
+  text-align: center !important;
+}
+
+/* Card Footer */
+.card-footer {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+  margin-top: auto !important;
+  padding-top: 1rem !important;
+  border-top: 1px solid var(--border-light) !important;
+}
+
+.points-section {
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+}
+
+.points-label {
+  font-size: 0.75rem !important;
+  color: var(--text-light) !important;
+  font-weight: 500 !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
+  margin-bottom: 0.25rem !important;
+}
+
+.points-value {
+  color: var(--text-dark) !important;
+  font-weight: 700 !important;
+  font-size: 1.125rem !important;
+  background: var(--gradient-primary) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-clip: text !important;
+}
+
+/* Action Buttons */
+.action-buttons {
+  display: flex !important;
+  gap: 0.5rem !important;
+}
+
+.swap-btn {
+  background: var(--gradient-primary) !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 8px !important;
+  padding: 0.5rem 1rem !important;
+  font-size: 0.875rem !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+  text-decoration: none !important;
+  position: relative !important;
+  z-index: 10 !important;
+  overflow: hidden !important;
+}
+
+.swap-btn::before {
+  content: "" !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: -100% !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: var(--gradient-secondary) !important;
+  transition: left 0.3s ease !important;
+  z-index: -1 !important;
+}
+
+.swap-btn:hover::before {
+  left: 0 !important;
+}
+
+.swap-btn:hover {
+  color: white !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3) !important;
+}
+
+.swapped-badge {
+  background: var(--text-light) !important;
+  color: white !important;
+  padding: 0.5rem 1rem !important;
+  border-radius: 8px !important;
+  font-size: 0.875rem !important;
+  font-weight: 600 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+}
+
+/* Fashion Link Reset */
+.fashion-link {
+  text-decoration: none !important;
+  color: inherit !important;
+  display: block !important;
+}
+
+.fashion-link:hover {
+  text-decoration: none !important;
+  color: inherit !important;
+}
+
+/* Empty State */
+.empty-state {
+  max-width: 500px !important;
+  margin: 3rem auto !important;
+  padding: 2rem !important;
+  background: var(--background-light) !important;
+  border-radius: 16px !important;
+  border: 1px solid var(--border-light) !important;
+}
+
+.empty-state h3 {
+  color: var(--text-dark) !important;
+  font-weight: 600 !important;
+}
+
+.empty-state p {
+  color: var(--text-light) !important;
+  margin-bottom: 1.5rem !important;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .stats-container {
+    flex-direction: column !important;
+    gap: 1rem !important;
+    padding: 1.5rem !important;
+  }
+
+  .stat-item {
+    justify-content: center !important;
+    padding: 1rem !important;
+  }
+
+  .page-title {
+    font-size: 2rem !important;
+  }
+
+  .fashion-card-body {
+    padding: 1rem !important;
+  }
+
+  .category-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (max-width: 576px) {
+  .card-footer {
+    flex-direction: column !important;
+    gap: 0.75rem !important;
+    align-items: stretch !important;
+  }
+
+  .swap-btn {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+
+  .carousel-caption {
+    padding: 1rem !important;
+    bottom: 1rem !important;
+  }
+
+  .carousel-caption h3 {
+    font-size: 1.25rem !important;
+  }
+}
+
+/* Accessibility Enhancements */
+.fashion-card:focus-within {
+  outline: 3px solid var(--primary-blue) !important;
+  outline-offset: 2px !important;
+}
+
+.fashion-link:focus {
+  outline: none !important;
+}
+
+.swap-btn:focus {
+  outline: 3px solid var(--primary-blue) !important;
+  outline-offset: 2px !important;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  .fashion-card {
+    border: 2px solid #000 !important;
+  }
+
+  .fashion-card-title {
+    color: #000 !important;
+  }
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .fashion-card,
+  .fashion-card-img,
+  .swap-btn,
+  .category-card {
+    transition: none !important;
+    animation: none !important;
+  }
+
+  .fashion-card:hover,
+  .category-card:hover {
+    transform: none !important;
+  }
+
+  .fashion-card:hover .fashion-card-img,
+  .category-card:hover .category-img {
+    transform: none !important;
+  }
+}
+
+/* Loading skeleton for images */
+.fashion-card-img-container::before {
+  content: "" !important;
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  background: linear-gradient(
+    90deg,
+    #f0f0f0 25%,
+    #e0e0e0 50%,
+    #f0f0f0 75%
+  ) !important;
+  background-size: 200% 100% !important;
+  animation: loading 1.5s infinite !important;
+  z-index: 1 !important;
+}
+
+.fashion-card-img {
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+@keyframes loading {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+/* Hide skeleton after image loads */
+.fashion-card-img-container:has(.fashion-card-img)::before {
+  display: none !important;
+}

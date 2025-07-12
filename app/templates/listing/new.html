@@ -1,0 +1,404 @@
+{% extends "/components/base.html" %} {% block title %}Add New Item - ReWear{%
+endblock %} {% block style %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/new.css') }}" />
+{% endblock %} {% block content %}
+<div class="add-item-container">
+  <!-- Header Section -->
+  <div class="page-header">
+    <div class="header-content">
+      <h1 class="page-title">
+        <i class="fas fa-plus-circle me-2"></i>
+        Add New Item
+      </h1>
+      <p class="page-subtitle">
+        Share your fashion treasures with the ReWear community
+      </p>
+    </div>
+  </div>
+
+  <!-- Main Form Card -->
+  <div class="form-card">
+    <form
+      action="{{ url_for('listing.createListing') }}"
+      method="POST"
+      enctype="multipart/form-data"
+      id="addItemForm">
+      <!-- Image Upload Section -->
+      <div class="section-card image-section">
+        <div class="section-header">
+          <h3 class="section-title">
+            <i class="fas fa-camera me-2"></i>
+            Item Images
+          </h3>
+          <p class="section-subtitle">
+            Upload high-quality images to showcase your item
+          </p>
+        </div>
+
+        <div class="image-upload-area">
+          <div class="upload-preview" id="uploadPreview">
+            <div class="upload-placeholder">
+              <i class="fas fa-cloud-upload-alt"></i>
+              <h4>Drag & Drop Images</h4>
+              <p>or click to browse</p>
+              <span class="upload-hint">PNG, JPG up to 5MB</span>
+            </div>
+          </div>
+          <input
+            type="file"
+            id="imageUpload"
+            name="images"
+            multiple
+            accept="image/*"
+            class="d-none" />
+          <input type="hidden" name="image_url" id="imageUrl" />
+        </div>
+
+        <div class="image-thumbnails" id="imageThumbnails"></div>
+      </div>
+
+      <!-- Item Details Section -->
+      <div class="section-card details-section">
+        <div class="section-header">
+          <h3 class="section-title">
+            <i class="fas fa-info-circle me-2"></i>
+            Item Details
+          </h3>
+          <p class="section-subtitle">
+            Provide detailed information about your item
+          </p>
+        </div>
+
+        <div class="form-grid">
+          <!-- Title -->
+          <div class="form-group full-width">
+            <label for="title" class="form-label">
+              <i class="fas fa-tag me-2"></i>
+              Title *
+            </label>
+            <input
+              type="text"
+              id="title"
+              name="title"
+              class="form-control"
+              placeholder="Enter a catchy title for your item"
+              required />
+            <div class="form-hint">Make it descriptive and appealing</div>
+          </div>
+
+          <!-- Description -->
+          <div class="form-group full-width">
+            <label for="description" class="form-label">
+              <i class="fas fa-align-left me-2"></i>
+              Description
+            </label>
+            <textarea
+              id="description"
+              name="description"
+              class="form-control"
+              rows="4"
+              placeholder="Describe your item's condition, style, and any special features..."></textarea>
+            <div class="form-hint">
+              Include size, condition, brand, and styling tips
+            </div>
+          </div>
+
+          <!-- Category -->
+          <div class="form-group">
+            <label for="category" class="form-label">
+              <i class="fas fa-users me-2"></i>
+              Category *
+            </label>
+            <select id="category" name="category" class="form-control" required>
+              <option value="">Select Category</option>
+              <option value="Men">Men</option>
+              <option value="Women">Women</option>
+              <option value="Kids">Kids</option>
+            </select>
+          </div>
+
+          <!-- Type -->
+          <div class="form-group">
+            <label for="type" class="form-label">
+              <i class="fas fa-tshirt me-2"></i>
+              Type *
+            </label>
+            <select id="type" name="type" class="form-control" required>
+              <option value="">Select Type</option>
+              <option value="Shirt">Shirt</option>
+              <option value="Pants">Pants</option>
+              <option value="Dress">Dress</option>
+              <option value="Others">Others</option>
+            </select>
+          </div>
+
+          <!-- Size -->
+          <div class="form-group">
+            <label for="size" class="form-label">
+              <i class="fas fa-ruler me-2"></i>
+              Size *
+            </label>
+            <select id="size" name="size" class="form-control" required>
+              <option value="">Select Size</option>
+              <option value="S">Small (S)</option>
+              <option value="M">Medium (M)</option>
+              <option value="L">Large (L)</option>
+              <option value="XL">Extra Large (XL)</option>
+            </select>
+          </div>
+
+          <!-- Point Value -->
+          <div class="form-group">
+            <label for="point_value" class="form-label">
+              <i class="fas fa-coins me-2"></i>
+              Point Value
+            </label>
+            <input
+              type="number"
+              id="point_value"
+              name="point_value"
+              class="form-control"
+              value="100"
+              min="0"
+              step="10"
+              placeholder="100" />
+            <div class="form-hint">Points others will earn by swapping</div>
+          </div>
+
+          <!-- Condition -->
+          <div class="form-group">
+            <label for="condition" class="form-label">
+              <i class="fas fa-star me-2"></i>
+              Condition
+            </label>
+            <select id="condition" name="condition" class="form-control">
+              <option value="">Select Condition</option>
+              <option value="Like New">Like New</option>
+              <option value="Excellent">Excellent</option>
+              <option value="Good">Good</option>
+              <option value="Fair">Fair</option>
+            </select>
+          </div>
+
+          <!-- Tags -->
+          <div class="form-group full-width">
+            <label for="tags" class="form-label">
+              <i class="fas fa-hashtag me-2"></i>
+              Tags
+            </label>
+            <input
+              type="text"
+              id="tags"
+              name="tags"
+              class="form-control"
+              placeholder="casual, vintage, summer, designer..." />
+            <div class="form-hint">Add relevant tags separated by commas</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="action-section">
+        <div class="action-buttons">
+          <button
+            type="button"
+            class="btn btn-secondary"
+            onclick="history.back()">
+            <i class="fas fa-times me-2"></i>
+            Cancel
+          </button>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-paper-plane me-2"></i>
+            Submit for Review
+          </button>
+        </div>
+        <div class="submit-info">
+          <i class="fas fa-info-circle me-2"></i>
+          Your item will be reviewed by our team before going live
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Preview Modal -->
+<div class="modal fade" id="imagePreviewModal" tabindex="-1">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Image Preview</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body text-center">
+        <img id="previewImage" src="" alt="Preview" class="img-fluid" />
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block script %}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const imageUpload = document.getElementById("imageUpload");
+    const uploadPreview = document.getElementById("uploadPreview");
+    const imageThumbnails = document.getElementById("imageThumbnails");
+    const imageUrl = document.getElementById("imageUrl");
+
+    let uploadedImages = [];
+
+    // Click to upload
+    uploadPreview.addEventListener("click", () => {
+      imageUpload.click();
+    });
+
+    // Drag and drop functionality
+    uploadPreview.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      uploadPreview.classList.add("dragover");
+    });
+
+    uploadPreview.addEventListener("dragleave", () => {
+      uploadPreview.classList.remove("dragover");
+    });
+
+    uploadPreview.addEventListener("drop", (e) => {
+      e.preventDefault();
+      uploadPreview.classList.remove("dragover");
+      handleFiles(e.dataTransfer.files);
+    });
+
+    // File input change
+    imageUpload.addEventListener("change", (e) => {
+      handleFiles(e.target.files);
+    });
+
+    function handleFiles(files) {
+      Array.from(files).forEach((file) => {
+        if (file.type.startsWith("image/")) {
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            addImageThumbnail(e.target.result, file.name);
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+    }
+
+    function addImageThumbnail(src, name) {
+      uploadedImages.push(src);
+
+      // Update preview area
+      if (uploadedImages.length === 1) {
+        uploadPreview.innerHTML = `
+                <div class="main-preview">
+                    <img src="${src}" alt="Main preview">
+                    <div class="preview-overlay">
+                        <button type="button" class="btn btn-sm btn-light" onclick="showImagePreview('${src}')">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+      }
+
+      // Add thumbnail
+      const thumbnail = document.createElement("div");
+      thumbnail.className = "thumbnail-item";
+      thumbnail.innerHTML = `
+            <img src="${src}" alt="${name}">
+            <button type="button" class="remove-thumbnail" onclick="removeImage(${
+              uploadedImages.length - 1
+            })">
+                <i class="fas fa-times"></i>
+            </button>
+        `;
+      imageThumbnails.appendChild(thumbnail);
+
+      // Update hidden input (use first image as main image URL)
+      if (uploadedImages.length === 1) {
+        imageUrl.value = src;
+      }
+    }
+
+    // Global function to remove image
+    window.removeImage = function (index) {
+      uploadedImages.splice(index, 1);
+      refreshImageDisplay();
+    };
+
+    // Global function to show image preview
+    window.showImagePreview = function (src) {
+      document.getElementById("previewImage").src = src;
+      new bootstrap.Modal(document.getElementById("imagePreviewModal")).show();
+    };
+
+    function refreshImageDisplay() {
+      imageThumbnails.innerHTML = "";
+
+      if (uploadedImages.length === 0) {
+        uploadPreview.innerHTML = `
+                <div class="upload-placeholder">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <h4>Drag & Drop Images</h4>
+                    <p>or click to browse</p>
+                    <span class="upload-hint">PNG, JPG up to 5MB</span>
+                </div>
+            `;
+        imageUrl.value = "";
+      } else {
+        uploadPreview.innerHTML = `
+                <div class="main-preview">
+                    <img src="${uploadedImages[0]}" alt="Main preview">
+                    <div class="preview-overlay">
+                        <button type="button" class="btn btn-sm btn-light" onclick="showImagePreview('${uploadedImages[0]}')">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+            `;
+        imageUrl.value = uploadedImages[0];
+      }
+
+      uploadedImages.forEach((src, index) => {
+        const thumbnail = document.createElement("div");
+        thumbnail.className = "thumbnail-item";
+        thumbnail.innerHTML = `
+                <img src="${src}" alt="Thumbnail ${index + 1}">
+                <button type="button" class="remove-thumbnail" onclick="removeImage(${index})">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+        imageThumbnails.appendChild(thumbnail);
+      });
+    }
+
+    // Form validation
+    document
+      .getElementById("addItemForm")
+      .addEventListener("submit", function (e) {
+        const title = document.getElementById("title").value.trim();
+        const category = document.getElementById("category").value;
+        const type = document.getElementById("type").value;
+        const size = document.getElementById("size").value;
+
+        if (!title || !category || !type || !size) {
+          e.preventDefault();
+          alert("Please fill in all required fields.");
+          return false;
+        }
+
+        if (uploadedImages.length === 0) {
+          const confirmed = confirm(
+            "Are you sure you want to submit without images? Items with images get more attention."
+          );
+          if (!confirmed) {
+            e.preventDefault();
+            return false;
+          }
+        }
+      });
+  });
+</script>
+{% endblock %}

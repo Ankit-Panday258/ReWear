@@ -1,3 +1,8 @@
+{% block style%}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/navbar.css') }}" />
+{%endblock%}
 <nav class="navbar navbar-expand-lg navbar-purple">
   <div class="container">
     <a class="navbar-brand" href="{{ url_for('home.index') }}">

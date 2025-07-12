@@ -1,40 +1,362 @@
+{% extends "/components/base.html" %} {% block title %}{{ listing.title }} -
+ReWear{% endblock %} {% block style %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/show.css') }}" />
+{% endblock %} {% block content %}
+<div class="item-detail-container">
+  <div class="container">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="{{ url_for('listing.index') }}" class="text-decoration-none">
+            <i class="fas fa-home me-1"></i>Listings
+          </a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">
+          {{ listing.title }}
+        </li>
+      </ol>
+    </nav>
 
-{% extends "/components/base.html" %}
-{% block title %}Product Details{% endblock %}
-{% block content %}
-<div class="container mt-5">
     <div class="row">
-        <!-- Left Half: Main Product Image -->
-        <div class="col-md-6">
-            <img src="https://picsum.photos/600/400?random=1" class="img-fluid rounded" alt="Main Product Image" style="object-fit: cover; width: 100%; height: 400px;">
+      <!-- Left Column: Image Gallery -->
+      <div class="col-lg-7 mb-4">
+        <div class="detail-card">
+          <div class="image-gallery">
+            <img
+              id="mainImage"
+              src="{{ listing.image_url }}"
+              alt="{{ listing.title }}"
+              class="main-image" />
+
+            <!-- Thumbnail Gallery -->
+            <div class="image-thumbnails">
+              <img
+                src="{{ listing.image_url }}"
+                alt="View 1"
+                class="thumbnail active"
+                onclick="changeMainImage(this.src)" />
+              <!-- Additional placeholder thumbnails -->
+              <img
+                src="https://picsum.photos/400/400?random={{ listing.id }}1"
+                alt="View 2"
+                class="thumbnail"
+                onclick="changeMainImage(this.src)" />
+              <img
+                src="https://picsum.photos/400/400?random={{ listing.id }}2"
+                alt="View 3"
+                class="thumbnail"
+                onclick="changeMainImage(this.src)" />
+              <img
+                src="https://picsum.photos/400/400?random={{ listing.id }}3"
+                alt="View 4"
+                class="thumbnail"
+                onclick="changeMainImage(this.src)" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Item Details -->
+      <div class="col-lg-5">
+        <div class="detail-card">
+          <div class="item-details">
+            <!-- Item Title -->
+            <h1 class="item-title">{{ listing.title }}</h1>
+
+            <!-- Status Badge -->
+            {% if listing.is_available and listing.status == 'Available' %}
+            <div class="status-badge status-available">
+              <i class="fas fa-check-circle"></i>
+              Available for Swap
+            </div>
+            {% else %}
+            <div class="status-badge status-unavailable">
+              <i class="fas fa-times-circle"></i>
+              {{ listing.status }}
+            </div>
+            {% endif %}
+
+            <!-- Item Meta Information -->
+            <div class="item-meta">
+              <div class="meta-badge">
+                <i class="fas fa-tag"></i>
+                {{ listing.category }}
+              </div>
+              <div class="meta-badge">
+                <i class="fas fa-tshirt"></i>
+                {{ listing.type }}
+              </div>
+              <div class="meta-badge">
+                <i class="fas fa-ruler-combined"></i>
+                Size {{ listing.size }}
+              </div>
+              <div class="meta-badge">
+                <i class="fas fa-calendar-alt"></i>
+                {{ listing.created_at.strftime('%b %d, %Y') }}
+              </div>
+            </div>
+
+            <!-- Item Description -->
+            <div class="item-description">
+              {{ listing.description or "This stylish piece is looking for a new
+              home! Perfect for someone who appreciates quality fashion. The
+              item is in great condition and ready for its next adventure." }}
+            </div>
+
+            <!-- Points Display -->
+            <div class="points-display">
+              <div class="points-label">Swap Points Required</div>
+              <div class="points-value">{{ listing.point_value }}</div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-section">
+              {% if session.get('user_id') %} {% if current_user and
+              current_user.user_id == listing.uploader_id %}
+              <!-- Owner View -->
+              <div class="alert alert-info">
+                <i class="fas fa-info-circle me-2"></i>
+                This is your listing. You can edit or manage it from your
+                profile.
+              </div>
+              <a
+                href="{{ url_for('listing.renderEditPage', listing_id=listing.id) }}"
+                class="btn btn-secondary-fashion">
+                <i class="fas fa-edit"></i>
+                Edit Listing
+              </a>
+              {% elif listing.is_available and listing.status == 'Available' %}
+              <!-- Available for Swap -->
+              <div class="action-buttons">
+                <a
+                  href="{{ url_for('listing.swapRequest', listing_id=listing.id) }}"
+                  class="btn btn-primary-fashion">
+                  <i class="fas fa-exchange-alt"></i>
+                  Request Swap
+                </a>
+
+                {% if current_user and current_user.points >=
+                listing.point_value %}
+                <button
+                  type="button"
+                  class="btn btn-secondary-fashion"
+                  data-bs-toggle="modal"
+                  data-bs-target="#redeemModal">
+                  <i class="fas fa-coins"></i>
+                  Redeem with Points
+                </button>
+                {% else %}
+                <button
+                  type="button"
+                  class="btn btn-secondary-fashion btn-disabled"
+                  disabled
+                  title="Insufficient points">
+                  <i class="fas fa-coins"></i>
+                  Need More Points ({{ listing.point_value -
+                  (current_user.points if current_user else 0) }} more)
+                </button>
+                {% endif %}
+              </div>
+              {% else %}
+              <!-- Not Available -->
+              <button class="btn btn-disabled" disabled>
+                <i class="fas fa-times-circle"></i>
+                Not Available
+              </button>
+              {% endif %} {% else %}
+              <!-- Not Logged In -->
+              <a
+                href="{{ url_for('auth.login') }}"
+                class="btn btn-primary-fashion">
+                <i class="fas fa-sign-in-alt"></i>
+                Login to Swap
+              </a>
+              {% endif %}
+            </div>
+          </div>
         </div>
 
-        <!-- Right Half: Product Details -->
-        <div class="col-md-6">
-            <h1 class="display-4">Product Name Example</h1>
-            <p class="lead">This is a detailed description of the product. It highlights its features, condition, and any other relevant information for a potential swapper. This could be a vintage item, a piece of clothing, an accessory, or anything else listed on ReWear.</p>
-            
-            <button class="btn btn-primary btn-lg mt-4">Swap This Item</button>
+        <!-- Uploader Information -->
+        <div class="detail-card">
+          <div class="uploader-info">
+            <h4 class="mb-3">
+              <i class="fas fa-user me-2"></i>
+              Listed by
+            </h4>
+            <div class="uploader-header">
+              <div class="uploader-avatar">
+                {{ listing.uploader.username[0].upper() }}
+              </div>
+              <div class="uploader-details">
+                <h5>{{ listing.uploader.username }}</h5>
+                <p class="uploader-stats">
+                  Member since {{ listing.uploader.created_at.strftime('%B %Y')
+                  }} • {{ listing.uploader.points }} points
+                </p>
+              </div>
+            </div>
+            {% if current_user and current_user.user_id != listing.uploader_id
+            %}
+            <a href="#" class="btn btn-outline-primary btn-sm">
+              <i class="fas fa-envelope me-1"></i>
+              View Profile
+            </a>
+            {% endif %}
+          </div>
         </div>
+      </div>
     </div>
 
-    <!-- More Images Div - Moved Below -->
-    <hr class="my-5">
-    <h4 class="mb-3">More Images</h4>
-    <div class="row mt-4">
-        <div class="col-md-3 col-6 mb-3">
-            <img src="https://picsum.photos/200/150?random=2" class="img-fluid rounded" alt="Product Thumbnail 1" style="object-fit: cover; width: 100%; height: 200px;">
+    <!-- Additional Information Cards -->
+    <div class="info-cards">
+      <div class="info-card">
+        <div class="info-card-icon">
+          <i class="fas fa-shield-alt"></i>
         </div>
-        <div class="col-md-3 col-6 mb-3">
-            <img src="https://picsum.photos/200/150?random=3" class="img-fluid rounded" alt="Product Thumbnail 2" style="object-fit: cover; width: 100%; height: 200px;">
+        <h6 class="info-card-title">Quality Assured</h6>
+        <p class="info-card-text">All items are reviewed before listing</p>
+      </div>
+
+      <div class="info-card">
+        <div class="info-card-icon">
+          <i class="fas fa-recycle"></i>
         </div>
-        <div class="col-md-3 col-6 mb-3">
-            <img src="https://picsum.photos/200/150?random=4" class="img-fluid rounded" alt="Product Thumbnail 3" style="object-fit: cover; width: 100%; height: 200px;">
+        <h6 class="info-card-title">Sustainable</h6>
+        <p class="info-card-text">Give fashion a second life</p>
+      </div>
+
+      <div class="info-card">
+        <div class="info-card-icon">
+          <i class="fas fa-handshake"></i>
         </div>
-        <div class="col-md-3 col-6 mb-3">
-            <img src="https://picsum.photos/200/150?random=5" class="img-fluid rounded" alt="Product Thumbnail 4" style="object-fit: cover; width: 100%; height: 200px;">
+        <h6 class="info-card-title">Safe Swapping</h6>
+        <p class="info-card-text">Secure and trusted community</p>
+      </div>
+
+      <div class="info-card">
+        <div class="info-card-icon">
+          <i class="fas fa-shipping-fast"></i>
         </div>
+        <h6 class="info-card-title">Easy Exchange</h6>
+        <p class="info-card-text">Simple swap process</p>
+      </div>
     </div>
+  </div>
 </div>
-{% endblock %}
 
+<!-- Redeem Points Modal -->
+<div
+  class="modal fade"
+  id="redeemModal"
+  tabindex="-1"
+  aria-labelledby="redeemModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="redeemModalLabel">
+          <i class="fas fa-coins me-2"></i>
+          Redeem with Points
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <div class="text-center mb-4">
+          <div class="points-display" style="margin: 0">
+            <div class="points-label">Points Required</div>
+            <div class="points-value">{{ listing.point_value }}</div>
+          </div>
+        </div>
+
+        <div class="alert alert-info">
+          <i class="fas fa-info-circle me-2"></i>
+          {% if current_user %} You currently have
+          <strong>{{ current_user.points }}</strong> points. After redemption,
+          you'll have
+          <strong>{{ current_user.points - listing.point_value }}</strong>
+          points remaining. {% endif %}
+        </div>
+
+        <p>
+          Are you sure you want to redeem this item using your points? This
+          action cannot be undone.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Cancel
+        </button>
+        <form
+          method="POST"
+          action="{{ url_for('listing.redeemWithPoints', listing_id=listing.id) }}"
+          style="display: inline">
+          <button type="submit" class="btn btn-primary-fashion">
+            <i class="fas fa-coins me-1"></i>
+            Confirm Redemption
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Image Gallery Functions
+  function changeMainImage(src) {
+    const mainImage = document.getElementById("mainImage");
+    const thumbnails = document.querySelectorAll(".thumbnail");
+
+    mainImage.src = src;
+
+    thumbnails.forEach((thumb) => {
+      thumb.classList.remove("active");
+      if (thumb.src === src) {
+        thumb.classList.add("active");
+      }
+    });
+  }
+
+  // Auto-hide flash messages
+  document.addEventListener("DOMContentLoaded", function () {
+    const alerts = document.querySelectorAll(".alert");
+    alerts.forEach(function (alert) {
+      setTimeout(function () {
+        if (alert.classList.contains("show")) {
+          alert.classList.remove("show");
+          setTimeout(function () {
+            alert.remove();
+          }, 150);
+        }
+      }, 5000);
+    });
+  });
+
+  // Smooth animations
+  document.addEventListener("DOMContentLoaded", function () {
+    const cards = document.querySelectorAll(".detail-card, .info-card");
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = "1";
+          entry.target.style.transform = "translateY(0)";
+        }
+      });
+    });
+
+    cards.forEach((card) => {
+      card.style.opacity = "0";
+      card.style.transform = "translateY(20px)";
+      card.style.transition = "all 0.6s ease";
+      observer.observe(card);
+    });
+  });
+</script>
+{% endblock %}

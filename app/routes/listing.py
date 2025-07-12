@@ -604,3 +604,86 @@ def searchListings():
                              'min_points': min_points,
                              'max_points': max_points
                          })
+
+# Add these routes at the end of the file (after line 606)
+
+# Swap Request GET Route - Display swap request form
+@listing.route("/<listing_id>/swap")
+@login_required
+def swapRequest(listing_id):
+    current_user = get_current_user()
+    listing_item = Listing.query.get_or_404(listing_id)
+    
+    # Check if user is trying to swap with their own item
+    if current_user.user_id == listing_item.uploader_id:
+        flash('You cannot swap with your own item.', 'warning')
+        return redirect(url_for('listing.showListing', listing_id=listing_id))
+    
+    # Check if listing is available
+    if not listing_item.is_available or listing_item.status != 'Available':
+        flash('This item is no longer available for swapping.', 'warning')
+        return redirect(url_for('listing.showListing', listing_id=listing_id))
+    
+    # Get user's available items for swap
+    user_available_items = Listing.query.filter(
+        Listing.uploader_id == current_user.user_id,
+        Listing.is_approved == True,
+        Listing.is_available == True,
+        Listing.status == 'Available'
+    ).all()
+    
+    if not user_available_items:
+        flash('You need to have available items to make a swap request. Please list an item first.', 'warning')
+        return redirect(url_for('listing.renderNewPage'))
+    
+    return render_template("listing/swap.html", 
+                         listing=listing_item, 
+                         current_user=current_user,
+                         user_available_items=user_available_items)
+
+# Redeem with Points Route
+@listing.route("/<listing_id>/redeem", methods=['POST'])
+@login_required
+def redeemWithPoints(listing_id):
+    current_user = get_current_user()
+    listing_item = Listing.query.get_or_404(listing_id)
+    
+    # Check if user is trying to redeem their own item
+    if current_user.user_id == listing_item.uploader_id:
+        flash('You cannot redeem your own item.', 'warning')
+        return redirect(url_for('listing.showListing', listing_id=listing_id))
+    
+    # Check if listing is available
+    if not listing_item.is_available or listing_item.status != 'Available':
+        flash('This item is no longer available for redemption.', 'warning')
+        return redirect(url_for('listing.showListing', listing_id=listing_id))
+    
+    # Check if user has enough points
+    if current_user.points < listing_item.point_value:
+        flash(f'Insufficient points. You need {listing_item.point_value - current_user.points} more points.', 'warning')
+        return redirect(url_for('listing.showListing', listing_id=listing_id))
+    
+    try:
+        # Deduct points from user
+        current_user.points -= listing_item.point_value
+        
+        # Add points to the uploader
+        uploader = listing_item.uploader
+        uploader.points += listing_item.point_value
+        
+        # Mark item as redeemed
+        listing_item.status = 'Redeemed'
+        listing_item.is_available = False
+        
+        db.session.commit()
+        
+        # Update session with new points
+        update_user_session(current_user)
+        
+        flash(f'Item redeemed successfully! {listing_item.point_value} points deducted from your account.', 'success')
+        return redirect(url_for('user.profile'))
+        
+    except Exception as e:
+        db.session.rollback()
+        flash('An error occurred while redeeming the item. Please try again.', 'danger')
+        return redirect(url_for('listing.showListing', listing_id=listing_id))

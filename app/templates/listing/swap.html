@@ -1,0 +1,176 @@
+{% extends "/components/base.html" %} {% block title %}Swap Request - {{
+listing.title }} - ReWear{% endblock %} {% block style %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/show.css') }}" />
+{% endblock %} {% block content %}
+<div class="item-detail-container">
+  <div class="container">
+    <!-- Breadcrumb -->
+    <nav aria-label="breadcrumb" class="mb-4">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="{{ url_for('listing.index') }}" class="text-decoration-none">
+            <i class="fas fa-home me-1"></i>Listings
+          </a>
+        </li>
+        <li class="breadcrumb-item">
+          <a
+            href="{{ url_for('listing.showListing', listing_id=listing.id) }}"
+            class="text-decoration-none">
+            {{ listing.title }}
+          </a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">Swap Request</li>
+      </ol>
+    </nav>
+
+    <div class="row">
+      <!-- Left Column: Item Being Requested -->
+      <div class="col-lg-6 mb-4">
+        <div class="detail-card">
+          <div class="item-details">
+            <h3 class="mb-3">
+              <i class="fas fa-eye me-2"></i>
+              Requesting Item
+            </h3>
+            <div class="d-flex gap-3 mb-3">
+              <img
+                src="{{ listing.image_url }}"
+                alt="{{ listing.title }}"
+                style="
+                  width: 100px;
+                  height: 100px;
+                  object-fit: cover;
+                  border-radius: 12px;
+                " />
+              <div>
+                <h5>{{ listing.title }}</h5>
+                <p class="text-muted mb-1">
+                  {{ listing.category }} - {{ listing.type }}
+                </p>
+                <p class="text-muted mb-1">Size: {{ listing.size }}</p>
+                <p class="text-muted">
+                  Worth: {{ listing.point_value }} points
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Swap Form -->
+      <div class="col-lg-6">
+        <div class="detail-card">
+          <div class="item-details">
+            <h3 class="mb-3">
+              <i class="fas fa-exchange-alt me-2"></i>
+              Your Swap Offer
+            </h3>
+
+            <form
+              method="POST"
+              action="{{ url_for('listing.createSwapRequest', listing_id=listing.id) }}">
+              <!-- Select Item to Offer -->
+              <div class="mb-4">
+                <label for="offered_item_id" class="form-label fw-bold">
+                  <i class="fas fa-tshirt me-1"></i>
+                  Select Item to Offer
+                </label>
+                <select
+                  class="form-select"
+                  id="offered_item_id"
+                  name="offered_item_id"
+                  required>
+                  <option value="">Choose an item...</option>
+                  {% for item in user_available_items %}
+                  <option value="{{ item.id }}">
+                    {{ item.title }} - {{ item.category }} ({{ item.point_value
+                    }} points)
+                  </option>
+                  {% endfor %}
+                </select>
+              </div>
+
+              <!-- Message -->
+              <div class="mb-4">
+                <label for="message" class="form-label fw-bold">
+                  <i class="fas fa-comment me-1"></i>
+                  Message (Optional)
+                </label>
+                <textarea
+                  class="form-control"
+                  id="message"
+                  name="message"
+                  rows="3"
+                  placeholder="Add a personal message to your swap request..."></textarea>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary-fashion flex-fill">
+                  <i class="fas fa-exchange-alt me-1"></i>
+                  Send Swap Request
+                </button>
+                <a
+                  href="{{ url_for('listing.showListing', listing_id=listing.id) }}"
+                  class="btn btn-secondary-fashion">
+                  <i class="fas fa-arrow-left me-1"></i>
+                  Back
+                </a>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Your Available Items Preview -->
+    {% if user_available_items %}
+    <div class="detail-card">
+      <div class="item-details">
+        <h4 class="mb-3">
+          <i class="fas fa-list me-2"></i>
+          Your Available Items
+        </h4>
+        <div class="row">
+          {% for item in user_available_items %}
+          <div class="col-md-3 mb-3">
+            <div class="card h-100">
+              <img
+                src="{{ item.image_url }}"
+                class="card-img-top"
+                alt="{{ item.title }}"
+                style="height: 150px; object-fit: cover" />
+              <div class="card-body p-2">
+                <h6 class="card-title mb-1">{{ item.title }}</h6>
+                <p class="card-text small text-muted mb-1">
+                  {{ item.category }} - {{ item.type }}
+                </p>
+                <p class="card-text small">
+                  <strong>{{ item.point_value }}</strong> points
+                </p>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+  // Preview selected item
+  document
+    .getElementById("offered_item_id")
+    .addEventListener("change", function () {
+      const selectedOption = this.options[this.selectedIndex];
+      if (selectedOption.value) {
+        // You could add preview functionality here
+        console.log("Selected item:", selectedOption.text);
+      }
+    });
+</script>
+{% endblock %}
