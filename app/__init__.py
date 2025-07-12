@@ -12,8 +12,16 @@ def create_app():
     db.init_app(app)
 
     from .routes.home import home
+    from .routes.listing import listing
+    from .routes.auth import auth
+    from .routes.user import user
+    from .routes.admin import admin
 
     app.register_blueprint(home, url_prefix='/')
+    app.register_blueprint(listing, url_prefix='/listings')
+    app.register_blueprint(auth, url_prefix='/auth')
+    app.register_blueprint(user, url_prefix='/user')
+    app.register_blueprint(admin, url_prefix='/admin')
 
 
     migrate = Migrate(app, db)
