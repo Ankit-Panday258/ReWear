@@ -19,6 +19,16 @@ def renderEditPage():
     return render_template("listing/edit.html")
 
 #Update route
-@listing.route("/id")
+@listing.route("/id", methods=["POST"])
 def updateListing():
     return redirect("listing/show.html")
+
+#Swap route
+@listing.route("/id/swap")
+def renderSwap():
+    return render_template("listing/swap.html")
+
+#Destroy route
+@listing.route("/id/delete")
+def destroyListing():
+    return redirect("listing/index.html")
