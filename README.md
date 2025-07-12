@@ -5,6 +5,7 @@
 ## 🌍 About ReWear
 
 **ReWear** is a sustainable fashion exchange platform that allows users to swap their unused clothing items through two innovative methods:
+
 - **Direct Item Swaps**: Exchange your items directly with other users
 - **Point-Based Redemption System**: Earn and spend points to acquire desired items
 
@@ -13,12 +14,14 @@ Our platform promotes environmental sustainability by giving fashion a second li
 ## ✨ Key Features
 
 ### 🔐 User Authentication & Management
+
 - Secure user registration and login system
 - Profile management with user statistics
 - Admin panel for platform management
 - Role-based access control
 
 ### 👕 Listing Management
+
 - Create detailed clothing listings with images
 - Categorize items (Men, Women, Kids)
 - Specify item types (Shirt, Pants, Dress, Others)
@@ -28,6 +31,7 @@ Our platform promotes environmental sustainability by giving fashion a second li
 - Admin approval workflow
 
 ### 🔄 Swap System
+
 - **Direct Swaps**: Exchange your item for another user's item
 - **Point Redemption**: Use earned points to acquire items without offering your own
 - Swap request management (Accept, Reject, Cancel)
@@ -35,12 +39,14 @@ Our platform promotes environmental sustainability by giving fashion a second li
 - Points earning system for successful swaps
 
 ### 💰 Points System
+
 - Users start with 100 points
 - Earn points by completing successful swaps
 - Spend points to redeem items without direct exchange
 - Track points balance in user profile
 
 ### 🛡️ Admin Features
+
 - Dashboard with platform statistics
 - User management (view, activate, deactivate)
 - Listing approval/rejection system
@@ -48,6 +54,7 @@ Our platform promotes environmental sustainability by giving fashion a second li
 - Content moderation tools
 
 ### 📱 Modern UI/UX
+
 - Responsive design for all devices
 - Bootstrap-powered interface
 - Interactive image galleries
@@ -57,18 +64,21 @@ Our platform promotes environmental sustainability by giving fashion a second li
 ## 🛠️ Technology Stack
 
 ### Backend
+
 - **Framework**: Flask (Python)
 - **Database**: SQLite with SQLAlchemy ORM
 - **Authentication**: Session-based with Werkzeug security
 - **Migrations**: Flask-Migrate with Alembic
 
 ### Frontend
+
 - **Template Engine**: Jinja2
 - **CSS Framework**: Bootstrap 5
 - **Icons**: Font Awesome & Bootstrap Icons
 - **JavaScript**: Vanilla JS for interactivity
 
 ### Database Schema
+
 - **Users**: User accounts, points, admin roles
 - **Listings**: Clothing items with detailed metadata
 - **Swap Requests**: Exchange proposals and status tracking
@@ -76,21 +86,25 @@ Our platform promotes environmental sustainability by giving fashion a second li
 ## 🚀 Installation & Setup
 
 ### Prerequisites
+
 - Python 3.8+
 - pip (Python package manager)
 
 ### 1. Clone the Repository
+
 ```bash
 git clone https://github.com/Anuraj-dev/ReWear.git
 cd ReWear
 ```
 
 ### 2. Create Virtual Environment
+
 ```bash
 python -m venv venv
 ```
 
 ### 3. Activate Virtual Environment
+
 ```bash
 # Windows
 venv\Scripts\activate
@@ -100,11 +114,13 @@ source venv/bin/activate
 ```
 
 ### 4. Install Dependencies
+
 ```bash
 pip install -r requirements.txt
 ```
 
 ### 5. Initialize Database
+
 ```bash
 flask db init
 flask db migrate -m "Initial migration"
@@ -112,11 +128,13 @@ flask db upgrade
 ```
 
 ### 6. (Optional) Populate Sample Data
+
 ```bash
 python sampledata.py
 ```
 
 ### 7. Run the Application
+
 ```bash
 python run.py
 ```
@@ -131,7 +149,7 @@ The application will be available at `http://localhost:5000`
 2. **Profile Setup**: Complete your profile with personal information
 3. **List Items**: Add your unused clothing items with photos and descriptions
 4. **Browse Listings**: Explore available items from other users
-5. **Make Swap Requests**: 
+5. **Make Swap Requests**:
    - Offer your item for direct swap
    - Use points for redemption without offering items
 6. **Manage Swaps**: Accept, reject, or cancel swap requests
@@ -148,6 +166,7 @@ The application will be available at `http://localhost:5000`
 ## 🗄️ Database Models
 
 ### User Model
+
 ```python
 - user_id (UUID, Primary Key)
 - username (String, Unique)
@@ -159,6 +178,7 @@ The application will be available at `http://localhost:5000`
 ```
 
 ### Listing Model
+
 ```python
 - id (UUID, Primary Key)
 - uploader_id (Foreign Key to User)
@@ -178,6 +198,7 @@ The application will be available at `http://localhost:5000`
 ```
 
 ### SwapRequest Model
+
 ```python
 - id (UUID, Primary Key)
 - requester_id (Foreign Key to User)
@@ -193,6 +214,7 @@ The application will be available at `http://localhost:5000`
 ## 🌐 API Endpoints
 
 ### Authentication Routes (`/auth`)
+
 - `GET /register` - User registration page
 - `POST /register` - Process registration
 - `GET /login` - User login page
@@ -200,6 +222,7 @@ The application will be available at `http://localhost:5000`
 - `POST /logout` - User logout
 
 ### User Routes (`/user`)
+
 - `GET /profile` - User profile page
 - `GET /my-listings` - User's listings with filters
 - `GET /my-swaps` - User's swap history
@@ -209,6 +232,7 @@ The application will be available at `http://localhost:5000`
 - `POST /api/swaps/<id>/cancel` - Cancel swap request
 
 ### Listing Routes (`/listings`)
+
 - `GET /` - Browse all approved listings
 - `GET /new` - Create new listing form
 - `POST /` - Submit new listing
@@ -220,6 +244,7 @@ The application will be available at `http://localhost:5000`
 - `POST /<id>/redeem` - Redeem with points
 
 ### Admin Routes (`/admin`)
+
 - `GET /` - Admin dashboard
 - `GET /users` - Manage users
 - `GET /listings` - Manage listings
@@ -239,6 +264,7 @@ The application will be available at `http://localhost:5000`
 ## 📱 Responsive Design
 
 The application is fully responsive and optimized for:
+
 - 📱 Mobile devices (320px+)
 - 📱 Tablets (768px+)
 - 💻 Desktop computers (1024px+)
@@ -254,6 +280,7 @@ The application is fully responsive and optimized for:
 ## 🧪 Sample Data
 
 The application includes a sample data generator (`sampledata.py`) that creates:
+
 - 6 sample users with varying point balances
 - 1 admin account (admin@rewear.com / admin123)
 - Multiple clothing listings across different categories
@@ -274,6 +301,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 👥 Support
 
 For support and questions:
+
 - 📧 Email: support@rewear.com
 - 🐛 Issues: [GitHub Issues](https://github.com/Anuraj-dev/ReWear/issues)
 - 📖 Documentation: This README file
@@ -293,6 +321,6 @@ For support and questions:
 
 ---
 
-**ReWear** - *Where Fashion Gets a Second Life* 🌱
+**ReWear** - _Where Fashion Gets a Second Life_ 🌱
 
 Made with ❤️ for a sustainable future.
