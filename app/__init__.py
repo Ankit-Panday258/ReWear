@@ -11,6 +11,8 @@ def create_app():
 
     db.init_app(app)
 
+    from app.models import Listing, User, SwapRequest
+
     from .routes.home import home
     from .routes.listing import listing
     from .routes.auth import auth
