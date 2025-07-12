@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-purple">
     <div class="container">
-        <a class="navbar-brand" href="#">
+        <a class="navbar-brand" href="{{ url_for('home.index') }}">
             <!-- Replace with your actual logo -->
             <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" height="30">
         </a>
@@ -31,8 +31,8 @@
                 <span class="badge bg-warning text-dark me-3" style="font-size: 1rem;">
                     <i class="bi bi-star-fill"></i> 120 Points
                 </span>
-                <a href="#" class="btn btn-outline-primary me-2">Login</a>
-                <a href="#" class="btn btn-primary">Sign Up</a>
+                <a href="{{ url_for('user.login') }}" class="btn btn-outline-primary me-2">Login</a>
+                <a href="{{ url_for('user.register') }}" class="btn btn-primary">Sign Up</a>
             </div>
         </div>
     </div>
